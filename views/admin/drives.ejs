@@ -1,0 +1,123 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/alerts') %>
+
+<main class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+      <div>
+        <h2 class="fw-bold text-dark mb-1">
+          <i class="bi bi-calendar-event text-primary me-2"></i> Seasonal Recruitment Drives Management
+        </h2>
+        <p class="text-muted small mb-0">Total Campus Hiring Drives: <strong><%= drives.length %></strong></p>
+      </div>
+      <div class="d-flex gap-2">
+        <a href="/admin/dashboard" class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-arrow-left me-1"></i> Dashboard
+        </a>
+        <a href="/admin/drives/new" class="btn btn-crp-primary btn-sm">
+          <i class="bi bi-calendar-plus me-1"></i> Schedule New Drive
+        </a>
+      </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="card card-crp p-3 mb-4">
+      <form action="/admin/drives" method="GET" class="row g-2 align-items-center">
+        <div class="col-md-5">
+          <select class="form-select" name="season" onchange="this.form.submit()">
+            <option value="All" <%= selectedSeason === 'All' ? 'selected' : '' %>>-- All Hiring Seasons --</option>
+            <option value="January–March" <%= selectedSeason === 'January–March' ? 'selected' : '' %>>Q1 (Jan – Mar)</option>
+            <option value="April–June" <%= selectedSeason === 'April–June' ? 'selected' : '' %>>Q2 (Apr – Jun)</option>
+            <option value="July–September" <%= selectedSeason === 'July–September' ? 'selected' : '' %>>Q3 (Jul – Sep)</option>
+            <option value="October–December" <%= selectedSeason === 'October–December' ? 'selected' : '' %>>Q4 (Oct – Dec)</option>
+          </select>
+        </div>
+
+        <div class="col-md-5">
+          <select class="form-select" name="status" onchange="this.form.submit()">
+            <option value="All" <%= selectedStatus === 'All' ? 'selected' : '' %>>-- All Statuses --</option>
+            <option value="Active" <%= selectedStatus === 'Active' ? 'selected' : '' %>>Active</option>
+            <option value="Upcoming" <%= selectedStatus === 'Upcoming' ? 'selected' : '' %>>Upcoming</option>
+            <option value="Closed" <%= selectedStatus === 'Closed' ? 'selected' : '' %>>Closed</option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <a href="/admin/drives" class="btn btn-outline-secondary w-100">Reset</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Drives Table -->
+    <div class="table-responsive bg-white rounded border shadow-sm">
+      <table class="table table-hover table-crp align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Company & Job Role</th>
+            <th>Hiring Season</th>
+            <th>Compensation</th>
+            <th>Cutoffs</th>
+            <th>Recruitment Dates</th>
+            <th>Status</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (drives && drives.length > 0) { %>
+            <% drives.forEach(d => { %>
+              <tr>
+                <td>
+                  <strong class="text-dark"><%= d.company ? d.company.name : 'Company' %></strong>
+                  <div class="text-primary small fw-semibold"><%= d.jobRole %></div>
+                  <small class="text-muted"><%= d.workLocation %> (<%= d.workMode %>)</small>
+                </td>
+                <td>
+                  <span class="badge <%= d.seasonQuarter === 'Q1' ? 'badge-season-q1' : d.seasonQuarter === 'Q2' ? 'badge-season-q2' : d.seasonQuarter === 'Q3' ? 'badge-season-q3' : 'badge-season-q4' %>">
+                    <%= d.hiringSeason %>
+                  </span>
+                </td>
+                <td><strong class="text-success"><%= d.salary %></strong></td>
+                <td>
+                  <div>Min CGPA: <strong><%= d.minCgpa %></strong></div>
+                  <small class="text-muted">Max Backlogs: <%= d.maxBacklogs %></small>
+                </td>
+                <td>
+                  <small class="d-block text-muted">Start: <%= new Date(d.startDate).toLocaleDateString() %></small>
+                  <small class="d-block text-muted">End: <%= new Date(d.endDate).toLocaleDateString() %></small>
+                </td>
+                <td>
+                  <span class="badge <%= d.status === 'Active' ? 'badge-status-active' : d.status === 'Upcoming' ? 'badge-status-upcoming' : 'badge-status-closed' %>">
+                    <%= d.status %>
+                  </span>
+                </td>
+                <td class="text-end">
+                  <div class="d-inline-flex gap-1">
+                    <a href="/admin/drives/<%= d._id %>/edit" class="btn btn-outline-secondary btn-sm" title="Edit Drive">
+                      <i class="bi bi-pencil"></i>
+                    </a>
+                    <form action="/admin/drives/<%= d._id %>/delete" method="POST" onsubmit="return confirmDelete('Delete recruitment drive for <%= d.jobRole %>?');">
+                      <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete Drive">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="7" class="text-center py-5 text-muted">
+                <i class="bi bi-calendar-x fs-1 d-block mb-2"></i>
+                No recruitment drives scheduled.
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,164 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/alerts') %>
+
+<main class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+      <div>
+        <h2 class="fw-bold text-dark mb-1">
+          <i class="bi bi-bar-chart-line text-primary me-2"></i> Placement Reports & Visual Analytics
+        </h2>
+        <p class="text-muted small mb-0">Seasonal hiring volume, department conversion rates, and executive placement summaries</p>
+      </div>
+      <a href="/admin/dashboard" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left me-1"></i> Dashboard
+      </a>
+    </div>
+
+    <!-- 4 High Level Metrics -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-3">
+        <div class="stat-card">
+          <span class="text-muted small fw-semibold">Total College Students</span>
+          <h3 class="fw-bold text-dark mb-0 mt-1"><%= totalStudents %></h3>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <span class="text-muted small fw-semibold">Placed Students</span>
+          <h3 class="fw-bold text-success mb-0 mt-1"><%= placedStudents %></h3>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <span class="text-muted small fw-semibold">Overall Placement %</span>
+          <h3 class="fw-bold text-primary mb-0 mt-1">
+            <%= totalStudents > 0 ? ((placedStudents / totalStudents) * 100).toFixed(1) : 0 %>%
+          </h3>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <span class="text-muted small fw-semibold">Seasonal Drives</span>
+          <h3 class="fw-bold text-info mb-0 mt-1"><%= totalDrives %></h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Charts Row -->
+    <div class="row g-4 mb-5">
+      <!-- Seasonal Distribution Chart -->
+      <div class="col-lg-5">
+        <div class="card card-crp p-4 h-100">
+          <h5 class="fw-bold text-dark mb-3">Drives by Seasonal Quarter</h5>
+          <div style="max-height: 280px; position: relative;">
+            <canvas id="seasonalChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Department Placement Rate Chart -->
+      <div class="col-lg-7">
+        <div class="card card-crp p-4 h-100">
+          <h5 class="fw-bold text-dark mb-3">Placement Rate by Academic Department (%)</h5>
+          <div style="max-height: 280px; position: relative;">
+            <canvas id="deptRateChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Department Summary Table -->
+    <div class="card card-crp p-4">
+      <h5 class="fw-bold text-dark mb-3">Department-Wise Performance Breakdown</h5>
+      <div class="table-responsive">
+        <table class="table table-hover table-crp align-middle mb-0">
+          <thead>
+            <tr>
+              <th>Department Code</th>
+              <th>Department Name</th>
+              <th>Total Students</th>
+              <th>Placed Candidates</th>
+              <th>Placement Rate (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (deptStats && deptStats.length > 0) { %>
+              <% deptStats.forEach(d => { %>
+                <tr>
+                  <td><strong class="text-primary"><%= d.code %></strong></td>
+                  <td><%= d.name %></td>
+                  <td><%= d.total %></td>
+                  <td><strong class="text-success"><%= d.placed %></strong></td>
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="progress flex-grow-1" style="height: 6px;">
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: <%= d.rate %>%;"></div>
+                      </div>
+                      <span class="fw-bold small"><%= d.rate %>%</span>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // 1. Seasonal Quarter Chart
+    const ctxSeason = document.getElementById('seasonalChart').getContext('2d');
+    new Chart(ctxSeason, {
+      type: 'pie',
+      data: {
+        labels: ['Q1 (Jan–Mar)', 'Q2 (Apr–Jun)', 'Q3 (Jul–Sep)', 'Q4 (Oct–Dec)'],
+        datasets: [{
+          data: [<%= seasonalCounts.Q1 %>, <%= seasonalCounts.Q2 %>, <%= seasonalCounts.Q3 %>, <%= seasonalCounts.Q4 %>],
+          backgroundColor: ['#0284c7', '#059669', '#d97706', '#7c3aed'],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom' }
+        }
+      }
+    });
+
+    // 2. Department Rates Bar Chart
+    <%
+      const deptLabels = deptStats.map(d => d.code);
+      const deptRates = deptStats.map(d => parseFloat(d.rate));
+    %>
+    const ctxDept = document.getElementById('deptRateChart').getContext('2d');
+    new Chart(ctxDept, {
+      type: 'bar',
+      data: {
+        labels: <%- JSON.stringify(deptLabels) %>,
+        datasets: [{
+          label: 'Placement %',
+          data: <%- JSON.stringify(deptRates) %>,
+          backgroundColor: '#1e40af',
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } }
+        }
+      }
+    });
+  });
+</script>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,233 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/alerts') %>
+
+<main class="py-5">
+  <div class="container">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/companies">Companies</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><%= company.name %></li>
+      </ol>
+    </nav>
+
+    <!-- Company Header Banner -->
+    <div class="card card-crp p-4 mb-4">
+      <div class="row align-items-center g-3">
+        <div class="col-auto">
+          <div class="rounded-3 bg-light border p-3 d-flex align-items-center justify-content-center" style="width: 72px; height: 72px;">
+            <i class="bi bi-building fs-1 text-primary"></i>
+          </div>
+        </div>
+        <div class="col">
+          <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+            <h2 class="fw-bold text-dark mb-0"><%= company.name %></h2>
+            <span class="badge bg-primary-subtle text-primary border"><%= company.industry %></span>
+            <span class="badge bg-secondary-subtle text-secondary"><%= company.tier %></span>
+          </div>
+          <p class="text-muted small mb-2"><i class="bi bi-geo-alt me-1"></i> Headquarters: <%= company.headquarters %></p>
+          <div class="d-flex gap-3 flex-wrap small text-muted">
+            <% if (company.website) { %>
+              <a href="<%= company.website %>" target="_blank" class="text-decoration-none text-primary">
+                <i class="bi bi-globe me-1"></i> Official Website <i class="bi bi-box-arrow-up-right small"></i>
+              </a>
+            <% } %>
+            <span><i class="bi bi-envelope me-1"></i> <%= company.contactEmail %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Informational Architecture Banner -->
+    <div class="info-principle-banner mb-4 shadow-sm">
+      <div class="d-flex align-items-center gap-3">
+        <i class="bi bi-info-circle-fill fs-3 text-primary"></i>
+        <div>
+          <h6 class="fw-bold mb-1">Informational & Placement Intelligence System</h6>
+          <p class="mb-0 small text-muted">
+            Students can review job roles, cutoffs, and multi-stage interview formats below. <strong>Notice:</strong> Job applications are not submitted through this portal. Campus placement registration is handled directly through the college placement cell.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Company Description -->
+    <div class="card card-crp p-4 mb-4">
+      <h5 class="fw-bold text-dark mb-3"><i class="bi bi-file-earmark-text me-2 text-primary"></i> About <%= company.name %></h5>
+      <p class="text-muted mb-0" style="white-space: pre-line;"><%= company.description %></p>
+    </div>
+
+    <!-- Seasonal Recruitment Drives -->
+    <h4 class="fw-bold text-dark mb-3">
+      <i class="bi bi-calendar-check text-primary me-2"></i> Seasonal Recruitment Drives & Job Roles (<%= drives.length %>)
+    </h4>
+
+    <% if (drives && drives.length > 0) { %>
+      <div class="row g-4">
+        <% drives.forEach((drive, index) => { %>
+          <%
+            let isEligible = null;
+            let eligibilityReason = '';
+            if (student) {
+              const cgpaPass = student.cgpa >= drive.minCgpa;
+              const backlogsPass = student.activeBacklogs <= drive.maxBacklogs;
+              const deptPass = drive.eligibleDepartments.some(d => d._id.toString() === student.department._id.toString());
+
+              if (!deptPass) {
+                isEligible = false;
+                eligibilityReason = 'Department not in eligible list.';
+              } else if (!cgpaPass) {
+                isEligible = false;
+                eligibilityReason = `CGPA (${student.cgpa}) is below required cutoff (${drive.minCgpa}).`;
+              } else if (!backlogsPass) {
+                isEligible = false;
+                eligibilityReason = `Active backlogs (${student.activeBacklogs}) exceed maximum allowed (${drive.maxBacklogs}).`;
+              } else {
+                isEligible = true;
+                eligibilityReason = 'All academic cutoffs met!';
+              }
+            }
+          %>
+
+          <div class="col-12">
+            <div class="card card-crp p-4">
+              <!-- Drive Header -->
+              <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 border-bottom pb-3 mb-3">
+                <div>
+                  <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+                    <h4 class="fw-bold text-primary mb-0"><%= drive.jobRole %></h4>
+                    <span class="badge <%= drive.seasonQuarter === 'Q1' ? 'badge-season-q1' : drive.seasonQuarter === 'Q2' ? 'badge-season-q2' : drive.seasonQuarter === 'Q3' ? 'badge-season-q3' : 'badge-season-q4' %>">
+                      <%= drive.hiringSeason %> (<%= drive.seasonQuarter %>)
+                    </span>
+                    <span class="badge <%= drive.status === 'Active' ? 'badge-status-active' : drive.status === 'Upcoming' ? 'badge-status-upcoming' : 'badge-status-closed' %>">
+                      <%= drive.status %>
+                    </span>
+                  </div>
+                  <span class="text-muted small">
+                    <i class="bi bi-geo-alt"></i> Location: <strong><%= drive.workLocation %></strong> | Work Mode: <strong><%= drive.workMode %></strong> | Vacancies: <strong><%= drive.vacancies %></strong>
+                  </span>
+                </div>
+
+                <!-- Real-time Eligibility Badge if Student is logged in -->
+                <% if (student) { %>
+                  <div>
+                    <% if (isEligible === true) { %>
+                      <div class="badge bg-success-subtle text-success border border-success p-2 text-start">
+                        <i class="bi bi-check-circle-fill me-1"></i> <strong>You are Eligible</strong>
+                        <small class="d-block text-muted"><%= eligibilityReason %></small>
+                      </div>
+                    <% } else { %>
+                      <div class="badge bg-warning-subtle text-dark border border-warning p-2 text-start">
+                        <i class="bi bi-exclamation-triangle-fill text-warning me-1"></i> <strong>Ineligible</strong>
+                        <small class="d-block text-muted"><%= eligibilityReason %></small>
+                      </div>
+                    <% } %>
+                  </div>
+                <% } %>
+              </div>
+
+              <!-- Compensation & Timeline -->
+              <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                  <div class="p-3 bg-light rounded text-center border">
+                    <small class="text-muted d-block">Compensation Package</small>
+                    <strong class="text-success fs-5"><%= drive.salary %></strong>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="p-3 bg-light rounded text-center border">
+                    <small class="text-muted d-block">Min CGPA Cutoff</small>
+                    <strong class="text-dark fs-5"><%= drive.minCgpa %> CGPA</strong>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="p-3 bg-light rounded text-center border">
+                    <small class="text-muted d-block">Max Active Backlogs</small>
+                    <strong class="text-dark fs-5"><%= drive.maxBacklogs %></strong>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="p-3 bg-light rounded text-center border">
+                    <small class="text-muted d-block">Recruitment Dates</small>
+                    <strong class="text-dark fs-6 d-block">
+                      <%= new Date(drive.startDate).toLocaleDateString() %> – <%= new Date(drive.endDate).toLocaleDateString() %>
+                    </strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Eligibility & Departments -->
+              <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                  <h6 class="fw-bold text-dark mb-2"><i class="bi bi-check2-square text-primary me-1"></i> Eligible Academic Departments</h6>
+                  <div class="d-flex flex-wrap gap-2 mb-3">
+                    <% drive.eligibleDepartments.forEach(dept => { %>
+                      <span class="badge bg-primary-subtle text-primary border"><%= dept.name %> (<%= dept.code %>)</span>
+                    <% }) %>
+                  </div>
+
+                  <h6 class="fw-bold text-dark mb-2"><i class="bi bi-award text-primary me-1"></i> Target Qualifications</h6>
+                  <p class="text-muted small mb-0"><%= drive.qualification %></p>
+                </div>
+
+                <div class="col-md-6">
+                  <h6 class="fw-bold text-dark mb-2"><i class="bi bi-code-slash text-primary me-1"></i> Technical Skills Required</h6>
+                  <div class="d-flex flex-wrap gap-2">
+                    <% drive.requiredSkills.forEach(skill => { %>
+                      <span class="badge bg-light text-dark border"><%= skill %></span>
+                    <% }) %>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Interview Rounds Timeline -->
+              <% if (drive.interviewRounds && drive.interviewRounds.length > 0) { %>
+                <div class="border-top pt-3 mt-2">
+                  <h6 class="fw-bold text-dark mb-3">
+                    <i class="bi bi-diagram-3 text-primary me-1"></i> Multi-Stage Selection Rounds
+                  </h6>
+                  <div class="interview-timeline">
+                    <% drive.interviewRounds.forEach(round => { %>
+                      <div class="interview-step">
+                        <div class="fw-bold text-dark">
+                          Round <%= round.roundNumber %>: <%= round.name %> 
+                          <span class="badge bg-light text-muted border ms-2 small"><%= round.mode %></span>
+                        </div>
+                        <% if (round.description) { %>
+                          <p class="text-muted small mb-0"><%= round.description %></p>
+                        <% } %>
+                      </div>
+                    <% }) %>
+                  </div>
+                </div>
+              <% } %>
+
+              <!-- Preparation Tips -->
+              <% if (drive.preparationTips && drive.preparationTips.length > 0) { %>
+                <div class="bg-light p-3 rounded mt-3">
+                  <h6 class="fw-bold text-dark mb-2"><i class="bi bi-lightbulb text-warning me-1"></i> Preparation Recommendations</h6>
+                  <ul class="text-muted small ps-3 mb-0">
+                    <% drive.preparationTips.forEach(tip => { %>
+                      <li><%= tip %></li>
+                    <% }) %>
+                  </ul>
+                </div>
+              <% } %>
+
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="alert alert-light border text-center py-4">
+        <i class="bi bi-calendar-x fs-2 text-muted d-block mb-2"></i>
+        No recruitment drives scheduled currently for this company.
+      </div>
+    <% } %>
+
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

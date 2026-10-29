@@ -1,0 +1,116 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/alerts') %>
+
+<main class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+      <div>
+        <h2 class="fw-bold text-dark mb-1">
+          <i class="bi bi-diagram-2 text-primary me-2"></i> Academic Departments Management
+        </h2>
+        <p class="text-muted small mb-0">Manage college departments, assign HOD details, and monitor student counts</p>
+      </div>
+      <div class="d-flex gap-2">
+        <a href="/admin/dashboard" class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-arrow-left me-1"></i> Dashboard
+        </a>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <!-- Departments Table Column -->
+      <div class="col-lg-8">
+        <div class="table-responsive bg-white rounded border shadow-sm">
+          <table class="table table-hover table-crp align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Department Name</th>
+                <th>HOD & Contact</th>
+                <th>Students</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (departments && departments.length > 0) { %>
+                <% departments.forEach(dept => { %>
+                  <tr>
+                    <td><strong class="text-primary fs-6"><%= dept.code %></strong></td>
+                    <td>
+                      <div class="fw-semibold text-dark"><%= dept.name %></div>
+                      <small class="text-muted"><%= dept.description %></small>
+                    </td>
+                    <td>
+                      <div><%= dept.hodName %></div>
+                      <small class="text-muted"><%= dept.hodEmail %></small>
+                    </td>
+                    <td><span class="badge bg-light text-dark border"><%= dept.totalStudents %> Enrolled</span></td>
+                    <td class="text-end">
+                      <form action="/admin/departments/<%= dept._id %>/delete" method="POST" onsubmit="return confirmDelete('Delete department <%= dept.code %>?');" class="d-inline">
+                        <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete Department">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr>
+                  <td colspan="5" class="text-center py-4 text-muted">No departments configured yet.</td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Add Department Quick Form Column -->
+      <div class="col-lg-4">
+        <div class="card card-crp p-4">
+          <h5 class="fw-bold text-dark mb-3">
+            <i class="bi bi-plus-circle text-primary me-1"></i> Add Department
+          </h5>
+          <form action="/admin/departments" method="POST">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-muted">Department Code *</label>
+              <input type="text" class="form-control text-uppercase" name="code" required placeholder="e.g. AI-ML">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-muted">Department Full Name *</label>
+              <input type="text" class="form-control" name="name" required placeholder="e.g. Dept of Artificial Intelligence">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-muted">Head of Department (HOD)</label>
+              <input type="text" class="form-control" name="hodName" placeholder="Dr. Suresh Rao">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-muted">HOD Official Email</label>
+              <input type="email" class="form-control" name="hodEmail" placeholder="hod.aiml@crp.edu">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-muted">HOD Phone Number</label>
+              <input type="text" class="form-control" name="hodPhone" placeholder="+91 98765 00000">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-muted">Description / Focus</label>
+              <textarea class="form-control" name="description" rows="2" placeholder="Focus areas..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-crp-primary w-100 py-2">
+              <i class="bi bi-check-circle me-1"></i> Create Department
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

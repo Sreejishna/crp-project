@@ -1,0 +1,109 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/alerts') %>
+
+<main class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+      <div>
+        <h2 class="fw-bold text-dark mb-1">
+          <i class="bi bi-buildings text-primary me-2"></i> Company Directory Management
+        </h2>
+        <p class="text-muted small mb-0">Total Registered Recruiters: <strong><%= companies.length %></strong></p>
+      </div>
+      <div class="d-flex gap-2">
+        <a href="/admin/dashboard" class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-arrow-left me-1"></i> Dashboard
+        </a>
+        <a href="/admin/companies/new" class="btn btn-crp-primary btn-sm">
+          <i class="bi bi-plus-circle me-1"></i> Add New Company
+        </a>
+      </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="card card-crp p-3 mb-4">
+      <form action="/admin/companies" method="GET" class="row g-2">
+        <div class="col-md-10">
+          <div class="input-group">
+            <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+            <input
+              type="text"
+              class="form-control"
+              name="search"
+              placeholder="Search companies by name or industry..."
+              value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+            >
+          </div>
+        </div>
+        <div class="col-md-2">
+          <button type="submit" class="btn btn-primary w-100">Search</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Companies Table -->
+    <div class="table-responsive bg-white rounded border shadow-sm">
+      <table class="table table-hover table-crp align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Company Name</th>
+            <th>Industry & Tier</th>
+            <th>Headquarters</th>
+            <th>Contact Email</th>
+            <th>Website</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (companies && companies.length > 0) { %>
+            <% companies.forEach(c => { %>
+              <tr>
+                <td>
+                  <strong class="text-dark"><%= c.name %></strong>
+                </td>
+                <td>
+                  <div class="small fw-semibold text-dark"><%= c.industry %></div>
+                  <span class="badge bg-light text-muted border small"><%= c.tier %></span>
+                </td>
+                <td><%= c.headquarters %></td>
+                <td><%= c.contactEmail %></td>
+                <td>
+                  <% if (c.website) { %>
+                    <a href="<%= c.website %>" target="_blank" class="small text-primary text-decoration-none">
+                      Visit <i class="bi bi-box-arrow-up-right" style="font-size: 0.75rem;"></i>
+                    </a>
+                  <% } else { %>
+                    <span class="text-muted small">N/A</span>
+                  <% } %>
+                </td>
+                <td class="text-end">
+                  <div class="d-inline-flex gap-1">
+                    <a href="/admin/companies/<%= c._id %>/edit" class="btn btn-outline-secondary btn-sm" title="Edit Company">
+                      <i class="bi bi-pencil"></i>
+                    </a>
+                    <form action="/admin/companies/<%= c._id %>/delete" method="POST" onsubmit="return confirmDelete('Delete company <%= c.name %> and all related drives?');">
+                      <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete Company">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="6" class="text-center py-5 text-muted">
+                <i class="bi bi-buildings fs-1 d-block mb-2"></i>
+                No companies registered yet.
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

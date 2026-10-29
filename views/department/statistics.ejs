@@ -1,0 +1,124 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/alerts') %>
+
+<main class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+      <div>
+        <h2 class="fw-bold text-dark mb-1">
+          <i class="bi bi-pie-chart text-primary me-2"></i> <%= department.code %> Placement Statistics & Analytics
+        </h2>
+        <p class="text-muted small mb-0">Department-level hiring analytics, conversion metrics, and company distribution</p>
+      </div>
+      <a href="/department/dashboard" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left me-1"></i> Dashboard
+      </a>
+    </div>
+
+    <!-- 4 Metrics -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-3">
+        <div class="stat-card">
+          <span class="text-muted small fw-semibold">Total Department Strength</span>
+          <h3 class="fw-bold text-dark mb-0 mt-1"><%= totalStudents %></h3>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <span class="text-muted small fw-semibold">Candidates Placed</span>
+          <h3 class="fw-bold text-success mb-0 mt-1"><%= placedStudents %></h3>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <span class="text-muted small fw-semibold">Unplaced / Ongoing</span>
+          <h3 class="fw-bold text-warning mb-0 mt-1"><%= unplacedStudents %></h3>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <span class="text-muted small fw-semibold">Placement Rate</span>
+          <h3 class="fw-bold text-primary mb-0 mt-1"><%= placementRate %>%</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visual Charts Row -->
+    <div class="row g-4 mb-4">
+      <!-- Placement Conversion Donut -->
+      <div class="col-md-5">
+        <div class="card card-crp p-4 h-100">
+          <h5 class="fw-bold text-dark mb-3">Placement Conversion Rate</h5>
+          <div style="max-height: 280px; position: relative;">
+            <canvas id="deptPlacementChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Recruiters Bar Chart -->
+      <div class="col-md-7">
+        <div class="card card-crp p-4 h-100">
+          <h5 class="fw-bold text-dark mb-3">Offers by Company in <%= department.code %></h5>
+          <div style="max-height: 280px; position: relative;">
+            <canvas id="deptCompanyChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // 1. Placed vs Unplaced Chart
+    const ctx1 = document.getElementById('deptPlacementChart').getContext('2d');
+    new Chart(ctx1, {
+      type: 'doughnut',
+      data: {
+        labels: ['Placed Students', 'Unplaced / Ongoing'],
+        datasets: [{
+          data: [<%= placedStudents %>, <%= unplacedStudents %>],
+          backgroundColor: ['#10b981', '#cbd5e1'],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom' }
+        }
+      }
+    });
+
+    // 2. Company offers chart
+    <%
+      const companyLabels = Object.keys(companyCounts);
+      const companyValues = Object.values(companyCounts);
+    %>
+    const ctx2 = document.getElementById('deptCompanyChart').getContext('2d');
+    new Chart(ctx2, {
+      type: 'bar',
+      data: {
+        labels: <%- JSON.stringify(companyLabels) %>,
+        datasets: [{
+          label: 'Offers Accepted',
+          data: <%- JSON.stringify(companyValues) %>,
+          backgroundColor: '#3b82f6',
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: { beginAtZero: true, ticks: { stepSize: 1 } }
+        }
+      }
+    });
+  });
+</script>
+
+<%- include('../partials/footer') %>

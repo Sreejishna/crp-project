@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recruitment & Placement Analytics | Cyclic Recruitment Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-light">
+
+  <div id="navbar-container"></div>
+
+  <!-- Header -->
+  <div class="bg-white border-bottom py-4">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+          <h2 class="fw-bold mb-1 text-dark"><i class="bi bi-graph-up-arrow text-primary me-2"></i> Placement Statistics & Seasonal Analytics</h2>
+          <p class="text-muted small mb-0">Visual breakdown of seasonal placement trends, department performance, and compensation distributions.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container py-4">
+    <div class="row g-4 mb-4">
+      <!-- Chart 1: Department Placement Rates -->
+      <div class="col-lg-8">
+        <div class="crp-card p-4 h-100">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold text-dark mb-0"><i class="bi bi-bar-chart-fill text-primary me-2"></i> Department-wise Placement Rates & Average CTC</h5>
+            <span class="badge bg-primary-subtle text-primary">Department Comparison</span>
+          </div>
+          <canvas id="chart-department-rates" style="max-height: 320px;"></canvas>
+        </div>
+      </div>
+
+      <!-- Chart 2: Seasonal Distribution -->
+      <div class="col-lg-4">
+        <div class="crp-card p-4 h-100">
+          <h5 class="fw-bold text-dark mb-3"><i class="bi bi-pie-chart-fill text-success me-2"></i> Seasonal Cycle Hiring Share</h5>
+          <canvas id="chart-seasonal-distribution" style="max-height: 260px;"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart 3: Package Tier Distribution -->
+    <div class="row g-4 mb-4">
+      <div class="col-lg-6">
+        <div class="crp-card p-4 h-100">
+          <h5 class="fw-bold text-dark mb-3"><i class="bi bi-award-fill text-warning me-2"></i> Salary Package Tier Breakdown</h5>
+          <canvas id="chart-tier-distribution" style="max-height: 260px;"></canvas>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="crp-card p-4 h-100 d-flex flex-column justify-content-between">
+          <div>
+            <h5 class="fw-bold text-dark mb-2"><i class="bi bi-shield-check text-info me-2"></i> Cyclic Recruitment Architecture</h5>
+            <p class="text-secondary small mb-3">
+              The cyclic model divides college placements into 4 predictable quarters to eliminate recruitment congestion and optimize student preparation timelines.
+            </p>
+
+            <div class="p-3 bg-light rounded small mb-2 border-start border-4 border-primary">
+              <strong>Q1 (Jan–Mar):</strong> High-conversion Spring Internships & Startup SDE roles.
+            </div>
+            <div class="p-3 bg-light rounded small mb-2 border-start border-4 border-success">
+              <strong>Q2 (Apr–Jun):</strong> Consulting, Cloud Platforms & Pre-placement interviews.
+            </div>
+            <div class="p-3 bg-light rounded small mb-2 border-start border-4 border-purple" style="border-left-color: #8B5CF6 !important;">
+              <strong>Q3 (Jul–Sep):</strong> Autumn Mega Campus Season & Super Dream Day-1 Giants.
+            </div>
+            <div class="p-3 bg-light rounded small border-start border-4 border-warning">
+              <strong>Q4 (Oct–Dec):</strong> Winter Dream Drives, Core Engineering & Fintech low-latency systems.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!CRP.requireAuth(['admin', 'department'])) return;
+      CRP.renderNavbar('admin-statistics');
+      CRP.renderFooter();
+      await AdminApp.initAnalytics();
+    });
+  </script>
+</body>
+</html>

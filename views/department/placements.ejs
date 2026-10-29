@@ -1,0 +1,67 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/alerts') %>
+
+<main class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+      <div>
+        <h2 class="fw-bold text-dark mb-1">
+          <i class="bi bi-trophy text-warning me-2"></i> <%= department.code %> Placement Track Record
+        </h2>
+        <p class="text-muted small mb-0">Official record of department students selected in campus drives</p>
+      </div>
+      <a href="/department/dashboard" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left me-1"></i> Dashboard
+      </a>
+    </div>
+
+    <!-- Placements Table -->
+    <div class="table-responsive bg-white rounded border shadow-sm">
+      <table class="table table-hover table-crp align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>USN / ID</th>
+            <th>Company</th>
+            <th>Role</th>
+            <th>Package (CTC)</th>
+            <th>Offer Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (records && records.length > 0) { %>
+            <% records.forEach(r => { %>
+              <tr>
+                <td>
+                  <strong class="text-dark"><%= r.student ? r.student.name : 'Student' %></strong>
+                  <small class="d-block text-muted">CGPA: <%= r.student ? r.student.cgpa : 'N/A' %></small>
+                </td>
+                <td><%= r.student ? r.student.studentId : '' %></td>
+                <td>
+                  <strong class="text-primary"><%= r.company ? r.company.name : 'Company' %></strong>
+                  <small class="d-block text-muted"><%= r.company ? r.company.industry : '' %></small>
+                </td>
+                <td><%= r.jobRole %></td>
+                <td><strong class="text-success fs-6"><%= r.package %></strong></td>
+                <td><%= new Date(r.placedDate).toLocaleDateString() %></td>
+                <td><span class="badge bg-success">Placed</span></td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="7" class="text-center py-5 text-muted">
+                <i class="bi bi-award fs-2 d-block mb-2 text-muted"></i>
+                No placement records found for this department yet.
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

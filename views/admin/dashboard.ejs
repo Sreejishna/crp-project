@@ -1,0 +1,208 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/alerts') %>
+
+<main class="py-5">
+  <div class="container">
+    <!-- Admin Header Banner -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+      <div>
+        <span class="badge bg-dark text-white fw-bold px-3 py-1 rounded-pill mb-2">
+          <i class="bi bi-shield-lock-fill me-1"></i> Central Placement Cell
+        </span>
+        <h2 class="fw-bold text-dark mb-1">Central Admin Dashboard</h2>
+        <p class="text-muted small mb-0">Full control over companies, seasonal drives, college students, departments, and announcements</p>
+      </div>
+      <div class="d-flex gap-2 flex-wrap">
+        <a href="/admin/companies/new" class="btn btn-outline-primary btn-sm fw-semibold">
+          <i class="bi bi-plus-circle me-1"></i> Add Company
+        </a>
+        <a href="/admin/drives/new" class="btn btn-crp-primary btn-sm fw-semibold">
+          <i class="bi bi-calendar-plus me-1"></i> Schedule Drive
+        </a>
+        <a href="/admin/announcements" class="btn btn-outline-danger btn-sm fw-semibold">
+          <i class="bi bi-megaphone me-1"></i> Broadcast Notice
+        </a>
+      </div>
+    </div>
+
+    <!-- 5 Admin Metric Tiles -->
+    <div class="row g-3 mb-4">
+      <div class="col-md">
+        <div class="stat-card">
+          <span class="text-muted small fw-semibold">Total Companies</span>
+          <h3 class="fw-bold text-dark mb-0 mt-1"><%= totalCompanies %></h3>
+        </div>
+      </div>
+      <div class="col-md">
+        <div class="stat-card">
+          <span class="text-muted small fw-semibold">Total Students</span>
+          <h3 class="fw-bold text-primary mb-0 mt-1"><%= totalStudents %></h3>
+        </div>
+      </div>
+      <div class="col-md">
+        <div class="stat-card">
+          <span class="text-muted small fw-semibold">Departments</span>
+          <h3 class="fw-bold text-dark mb-0 mt-1"><%= totalDepartments %></h3>
+        </div>
+      </div>
+      <div class="col-md">
+        <div class="stat-card">
+          <span class="text-muted small fw-semibold">Active Drives</span>
+          <h3 class="fw-bold text-success mb-0 mt-1"><%= activeDrives %></h3>
+        </div>
+      </div>
+      <div class="col-md">
+        <div class="stat-card">
+          <span class="text-muted small fw-semibold">Upcoming Drives</span>
+          <h3 class="fw-bold text-info mb-0 mt-1"><%= upcomingDrives %></h3>
+        </div>
+      </div>
+      <div class="col-md">
+        <div class="stat-card">
+          <span class="text-muted small fw-semibold">Total Placements</span>
+          <h3 class="fw-bold text-warning-emphasis mb-0 mt-1"><%= totalPlacements %></h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Navigation Panels Grid -->
+    <div class="row g-4 mb-4">
+      <div class="col-md-4">
+        <div class="card card-crp p-4 h-100">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="stat-icon bg-primary text-white rounded">
+              <i class="bi bi-buildings fs-4"></i>
+            </div>
+            <div>
+              <h5 class="fw-bold mb-0">Company Directory</h5>
+              <small class="text-muted"><%= totalCompanies %> Partners Registered</small>
+            </div>
+          </div>
+          <p class="text-muted small mb-4">Manage corporate recruiters, compensation tiers, company overviews, and HR contacts.</p>
+          <div class="mt-auto d-flex gap-2">
+            <a href="/admin/companies" class="btn btn-outline-primary btn-sm w-100">Manage Companies</a>
+            <a href="/admin/companies/new" class="btn btn-primary btn-sm"><i class="bi bi-plus"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card card-crp p-4 h-100">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="stat-icon bg-success text-white rounded">
+              <i class="bi bi-calendar-range fs-4"></i>
+            </div>
+            <div>
+              <h5 class="fw-bold mb-0">Seasonal Drives</h5>
+              <small class="text-muted"><%= activeDrives + upcomingDrives %> In Progress</small>
+            </div>
+          </div>
+          <p class="text-muted small mb-4">Create seasonal campus drives (Q1-Q4), configure cutoffs, round timelines, and stipends.</p>
+          <div class="mt-auto d-flex gap-2">
+            <a href="/admin/drives" class="btn btn-outline-success btn-sm w-100">Manage Drives</a>
+            <a href="/admin/drives/new" class="btn btn-success btn-sm"><i class="bi bi-plus"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card card-crp p-4 h-100">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="stat-icon bg-info text-white rounded">
+              <i class="bi bi-people fs-4"></i>
+            </div>
+            <div>
+              <h5 class="fw-bold mb-0">Student Roster</h5>
+              <small class="text-muted"><%= totalStudents %> Candidates</small>
+            </div>
+          </div>
+          <p class="text-muted small mb-4">College-wide student management, CGPA updates, active backlog logs, and placement tracking.</p>
+          <div class="mt-auto d-flex gap-2">
+            <a href="/admin/students" class="btn btn-outline-info btn-sm w-100">Manage Students</a>
+            <a href="/admin/students/new" class="btn btn-info btn-sm text-white"><i class="bi bi-plus"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Drives & Announcements Tables -->
+    <div class="row g-4">
+      <div class="col-lg-7">
+        <div class="card card-crp p-4 h-100">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold text-dark mb-0">Recently Created Recruitment Drives</h5>
+            <a href="/admin/drives" class="btn btn-outline-primary btn-sm">View All</a>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover table-crp align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Company & Role</th>
+                  <th>Season</th>
+                  <th>Cutoff</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if (recentDrives && recentDrives.length > 0) { %>
+                  <% recentDrives.forEach(d => { %>
+                    <tr>
+                      <td>
+                        <strong class="text-dark"><%= d.company ? d.company.name : 'Company' %></strong>
+                        <small class="d-block text-primary"><%= d.jobRole %></small>
+                      </td>
+                      <td><span class="badge badge-season-q1"><%= d.hiringSeason %></span></td>
+                      <td><%= d.minCgpa %> CGPA</td>
+                      <td>
+                        <span class="badge <%= d.status === 'Active' ? 'badge-status-active' : 'badge-status-upcoming' %>">
+                          <%= d.status %>
+                        </span>
+                      </td>
+                      <td>
+                        <a href="/admin/drives/<%= d._id %>/edit" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+                      </td>
+                    </tr>
+                  <% }) %>
+                <% } else { %>
+                  <tr><td colspan="5" class="text-center py-3 text-muted">No drives scheduled yet.</td></tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="card card-crp p-4 h-100">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold text-dark mb-0">Recent Announcements</h5>
+            <a href="/admin/announcements" class="btn btn-outline-danger btn-sm">Manage</a>
+          </div>
+          <% if (recentAnnouncements && recentAnnouncements.length > 0) { %>
+            <div class="d-flex flex-column gap-3">
+              <% recentAnnouncements.forEach(a => { %>
+                <div class="border rounded p-3">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <strong class="text-dark small"><%= a.title %></strong>
+                    <span class="badge <%= a.priority === 'Urgent' ? 'bg-danger' : 'bg-warning text-dark' %>"><%= a.priority %></span>
+                  </div>
+                  <p class="text-muted small mb-1"><%= a.description %></p>
+                  <small class="text-secondary" style="font-size: 0.75rem;">
+                    Target: <%= a.department ? a.department.code : 'All Departments' %> | <%= new Date(a.date).toLocaleDateString() %>
+                  </small>
+                </div>
+              <% }) %>
+            </div>
+          <% } else { %>
+            <p class="text-muted small text-center py-4">No recent announcements.</p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

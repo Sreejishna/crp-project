@@ -1,0 +1,126 @@
+<!-- Top Demo Bar for Reviewers & Project Evaluation -->
+<div class="demo-banner text-center py-1">
+  <div class="container d-flex justify-content-between align-items-center flex-wrap">
+    <span>
+      <i class="bi bi-mortarboard-fill me-1"></i> MCA Final Project: <strong>Cyclic Recruitment Portal (CRP)</strong>
+    </span>
+    <span class="d-none d-md-inline">
+      <% if (!user) { %>
+        Demo Logins: 
+        <a href="/login" class="ms-1 me-2 fw-semibold"><i class="bi bi-shield-lock"></i> Admin</a> |
+        <a href="/login" class="ms-2 me-2 fw-semibold"><i class="bi bi-building"></i> Dept (MCA)</a> |
+        <a href="/login" class="ms-2 fw-semibold"><i class="bi bi-person-badge"></i> Student</a>
+      <% } else { %>
+        Logged in as: <strong><%= user.name %></strong> (<span class="badge bg-light text-primary text-uppercase"><%= user.role %></span>)
+      <% } %>
+    </span>
+  </div>
+</div>
+
+<!-- Main Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-crp sticky-top">
+  <div class="container">
+    <a class="navbar-brand navbar-brand-logo d-flex align-items-center gap-2" href="/">
+      <i class="bi bi-calendar-range text-primary fs-3"></i>
+      <div>
+        <span>CRP</span><span class="text-dark">Portal</span>
+        <span class="badge-crp ms-1">Seasonal Hiring</span>
+      </div>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#crpNavbar" aria-controls="crpNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="crpNavbar">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3">
+        <!-- Common Links -->
+        <li class="nav-item">
+          <a class="nav-link" href="/"><i class="bi bi-house-door me-1"></i> Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/seasonal-calendar"><i class="bi bi-calendar3 me-1"></i> Seasonal Calendar</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/companies"><i class="bi bi-building me-1"></i> Companies</a>
+        </li>
+
+        <% if (user && user.role === 'student') { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/student/dashboard"><i class="bi bi-speedometer2 me-1"></i> My Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/student/drives"><i class="bi bi-briefcase me-1"></i> Drives & Cutoffs</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/student/roadmaps"><i class="bi bi-diagram-3 me-1"></i> Skill Roadmaps</a>
+          </li>
+        <% } %>
+
+        <% if (user && (user.role === 'department' || user.role === 'admin')) { %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-bank me-1"></i> Department
+            </a>
+            <ul class="dropdown-menu shadow-sm">
+              <li><a class="dropdown-item" href="/department/dashboard"><i class="bi bi-speedometer me-2"></i> Dept Dashboard</a></li>
+              <li><a class="dropdown-item" href="/department/students"><i class="bi bi-people me-2"></i> Department Students</a></li>
+              <li><a class="dropdown-item" href="/department/drives"><i class="bi bi-check2-circle me-2"></i> Eligible Drives</a></li>
+              <li><a class="dropdown-item" href="/department/placements"><i class="bi bi-trophy me-2"></i> Placements</a></li>
+              <li><a class="dropdown-item" href="/department/statistics"><i class="bi bi-pie-chart me-2"></i> Statistics</a></li>
+            </ul>
+          </li>
+        <% } %>
+
+        <% if (user && user.role === 'admin') { %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-primary fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-gear-fill me-1"></i> Admin Panel
+            </a>
+            <ul class="dropdown-menu shadow-sm">
+              <li><a class="dropdown-item" href="/admin/dashboard"><i class="bi bi-speedometer2 me-2"></i> Admin Dashboard</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/admin/companies"><i class="bi bi-building me-2"></i> Manage Companies</a></li>
+              <li><a class="dropdown-item" href="/admin/drives"><i class="bi bi-calendar-event me-2"></i> Manage Drives</a></li>
+              <li><a class="dropdown-item" href="/admin/students"><i class="bi bi-people me-2"></i> Student Records</a></li>
+              <li><a class="dropdown-item" href="/admin/departments"><i class="bi bi-diagram-2 me-2"></i> Departments</a></li>
+              <li><a class="dropdown-item" href="/admin/announcements"><i class="bi bi-megaphone me-2"></i> Announcements</a></li>
+              <li><a class="dropdown-item" href="/admin/placements"><i class="bi bi-award me-2"></i> Placements</a></li>
+              <li><a class="dropdown-item" href="/admin/reports"><i class="bi bi-bar-chart-line me-2"></i> Reports & Analytics</a></li>
+            </ul>
+          </li>
+        <% } %>
+      </ul>
+
+      <!-- User Session Actions -->
+      <div class="d-flex align-items-center gap-2">
+        <% if (!user) { %>
+          <a href="/login" class="btn btn-outline-primary btn-sm px-3 fw-semibold">
+            <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
+          </a>
+          <a href="/register" class="btn btn-crp-primary btn-sm px-3">
+            <i class="bi bi-person-plus me-1"></i> Register Student
+          </a>
+        <% } else { %>
+          <div class="dropdown">
+            <button class="btn btn-light border btn-sm dropdown-toggle fw-semibold d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-person-circle fs-6 text-primary"></i>
+              <span><%= user.name %></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+              <li class="px-3 py-1">
+                <small class="text-muted d-block">Role</small>
+                <span class="badge bg-primary text-uppercase"><%= user.role %></span>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <% if (user.role === 'student') { %>
+                <li><a class="dropdown-item" href="/student/profile"><i class="bi bi-person-lines-fill me-2"></i> My Academic Profile</a></li>
+              <% } %>
+              <li><a class="dropdown-item text-danger" href="/logout"><i class="bi bi-box-arrow-right me-2"></i> Sign Out</a></li>
+            </ul>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</nav>

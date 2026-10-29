@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recruitment Drive Management | Cyclic Recruitment Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-light">
+
+  <div id="navbar-container"></div>
+
+  <!-- Header -->
+  <div class="bg-white border-bottom py-4">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+          <h2 class="fw-bold mb-1 text-dark"><i class="bi bi-calendar-check text-primary me-2"></i> Recruitment Drive Management</h2>
+          <p class="text-muted small mb-0">Schedule campus drives, configure multi-stage interview rounds, and set eligibility criteria.</p>
+        </div>
+        <button class="btn btn-primary-crp btn-sm px-3" onclick="AdminApp.openAddDriveModal()">
+          <i class="bi bi-plus-circle me-1"></i> Schedule New Campus Drive
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container py-4">
+    <!-- Drives Table -->
+    <div class="crp-card">
+      <div class="crp-card-header">
+        <h5 class="fw-bold text-dark mb-0">Active & Scheduled Campus Drives</h5>
+        <span class="badge bg-light text-dark border" id="admin-drives-count">Loading...</span>
+      </div>
+      <div class="table-responsive">
+        <table class="crp-table">
+          <thead>
+            <tr>
+              <th>Drive Title / Company</th>
+              <th>Hiring Season</th>
+              <th>Drive Window</th>
+              <th>Status</th>
+              <th>Min CGPA</th>
+              <th>Rounds</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="admin-drives-table-body">
+            <tr><td colspan="7" class="text-center py-4 text-muted">Loading recruitment drives...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Schedule Drive Modal -->
+  <div class="modal fade" id="adminDriveModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">Schedule Campus Recruitment Drive</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <form id="admin-drive-form">
+            <input type="hidden" id="drive-id-field">
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Recruiting Company *</label>
+                <select id="drive-input-company" class="form-select" required>
+                  <option value="">Loading companies...</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Drive Title *</label>
+                <input type="text" id="drive-input-title" class="form-control" placeholder="e.g. Autumn SDE Campus Drive 2026" required>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">Hiring Season</label>
+                <select id="drive-input-season" class="form-select">
+                  <option value="January - March Hiring">Q1: Jan - Mar</option>
+                  <option value="April - June Hiring">Q2: Apr - Jun</option>
+                  <option value="July - September Hiring" selected>Q3: Jul - Sep</option>
+                  <option value="October - December Hiring">Q4: Oct - Dec</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">Drive Type</label>
+                <select id="drive-input-type" class="form-select">
+                  <option value="On-Campus Mega Drive" selected>On-Campus Mega Drive</option>
+                  <option value="Seasonal Hybrid Drive">Seasonal Hybrid Drive</option>
+                  <option value="Virtual Dream Drive">Virtual Dream Drive</option>
+                  <option value="Pool Campus Drive">Pool Campus Drive</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">Drive Status</label>
+                <select id="drive-input-status" class="form-select">
+                  <option value="Upcoming" selected>Upcoming</option>
+                  <option value="Active / In Progress">Active / In Progress</option>
+                  <option value="Completed">Completed</option>
+                </select>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">Drive Start Date *</label>
+                <input type="date" id="drive-input-start" class="form-control" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">Drive End Date *</label>
+                <input type="date" id="drive-input-end" class="form-control" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">Registration Deadline *</label>
+                <input type="date" id="drive-input-deadline" class="form-control" required>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Recruitment Mode</label>
+                <select id="drive-input-mode" class="form-select">
+                  <option value="Hybrid (Online Test + Offline Interview)" selected>Hybrid (Online Test + Offline Interview)</option>
+                  <option value="Virtual / Online">Virtual / Online</option>
+                  <option value="In-Person / On-Campus">In-Person / On-Campus</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Campus Venue / Platform</label>
+                <input type="text" id="drive-input-venue" class="form-control" value="Campus Placement Auditorium & Lab 401">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label small fw-bold">Min CGPA</label>
+                <input type="number" step="0.1" id="drive-input-mincgpa" class="form-control" value="7.0">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label small fw-bold">Max Backlogs</label>
+                <input type="number" id="drive-input-backlogs" class="form-control" value="0">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label small fw-bold">Salary Range</label>
+                <input type="text" id="drive-input-salary" class="form-control" value="12 - 18 LPA">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label small fw-bold">Total Openings</label>
+                <input type="number" id="drive-input-openings" class="form-control" value="25">
+              </div>
+
+              <div class="col-12">
+                <label class="form-label small fw-bold">Special Instructions for Students</label>
+                <textarea id="drive-input-instructions" rows="2" class="form-control">Bring 3 copies of resume, college ID card, and report to Auditorium in formal dress code 30 minutes prior.</textarea>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary-crp btn-sm px-4">
+                <i class="bi bi-check2-circle me-1"></i> Save Recruitment Drive
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!CRP.requireAuth(['admin'])) return;
+      CRP.renderNavbar('admin-drives');
+      CRP.renderFooter();
+      await AdminApp.initDriveManagement();
+    });
+  </script>
+</body>
+</html>

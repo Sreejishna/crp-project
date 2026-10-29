@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recruitment Drive Details | Cyclic Recruitment Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-light">
+
+  <div id="navbar-container"></div>
+
+  <div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+      <ol class="breadcrumb small">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item"><a href="seasonal-calendar.html">Seasonal Calendar</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Drive Schedule Details</li>
+      </ol>
+    </nav>
+
+    <!-- Header Card -->
+    <div class="crp-card p-4 mb-4">
+      <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+        <div class="d-flex align-items-center gap-3">
+          <img id="drive-company-logo" src="https://ui-avatars.com/api/?name=Company" alt="Logo" class="company-card-logo" style="width: 72px; height: 72px;" onerror="this.src='https://ui-avatars.com/api/?name=Co&background=4F46E5&color=fff'">
+          <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <h3 class="fw-bold text-dark mb-0" id="drive-title">Drive Title</h3>
+              <span id="drive-status-badge"></span>
+            </div>
+            <div class="text-muted small mb-2">
+              <span id="drive-company-name" class="fw-semibold text-dark">Company</span> • <span id="drive-company-tier">Tier</span> • <span id="drive-company-industry">Industry</span>
+            </div>
+            <div id="drive-season-badge"></div>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2 align-items-center">
+          <button id="btn-check-my-eligibility" class="btn btn-primary-crp px-3 py-2">
+            <i class="bi bi-patch-check-fill me-1"></i> Check My Eligibility
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Overview Stats -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-3 col-6">
+        <div class="crp-card p-3 text-center">
+          <div class="text-muted small fw-bold text-uppercase">CTC Package</div>
+          <div class="fs-4 fw-bold text-success" id="drive-ctc">18 - 28 LPA</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="crp-card p-3 text-center">
+          <div class="text-muted small fw-bold text-uppercase">Drive Dates</div>
+          <div class="fs-6 fw-bold text-dark" id="drive-start">Jul 15, 2026</div>
+          <div class="text-muted small">to <span id="drive-end">Jul 22, 2026</span></div>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="crp-card p-3 text-center">
+          <div class="text-muted small fw-bold text-uppercase">Registration Deadline</div>
+          <div class="fs-6 fw-bold text-danger" id="drive-deadline">Jul 10, 2026</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="crp-card p-3 text-center">
+          <div class="text-muted small fw-bold text-uppercase">Openings / Mode</div>
+          <div class="fs-5 fw-bold text-dark" id="drive-openings">25 Positions</div>
+          <div class="text-muted small" id="drive-mode">Hybrid</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <!-- Left Column: Rounds Timeline -->
+      <div class="col-lg-7">
+        <div class="crp-card mb-4">
+          <div class="crp-card-header">
+            <h5 class="fw-bold text-dark mb-0"><i class="bi bi-diagram-3-fill text-primary me-2"></i> Drive Stages & Interview Schedule</h5>
+            <span class="badge bg-primary-subtle text-primary">Official Timeline</span>
+          </div>
+          <div class="crp-card-body">
+            <div class="round-timeline" id="drive-rounds-timeline">
+              <!-- Timeline Injected from student.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Student Instructions -->
+        <div class="crp-card mb-4">
+          <div class="crp-card-header">
+            <h5 class="fw-bold text-dark mb-0"><i class="bi bi-info-circle-fill text-warning me-2"></i> Student Instructions & Venue Details</h5>
+          </div>
+          <div class="crp-card-body">
+            <p class="small text-secondary mb-3" id="drive-instructions"></p>
+            <div class="p-3 bg-light rounded small">
+              <strong>Campus Venue / Platform:</strong> <span id="drive-venue" class="text-dark fw-bold"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Eligibility Checklist -->
+      <div class="col-lg-5">
+        <div class="crp-card mb-4">
+          <div class="crp-card-header">
+            <h5 class="fw-bold text-dark mb-0"><i class="bi bi-shield-check text-success me-2"></i> Drive Eligibility Cutoffs</h5>
+            <span class="badge bg-success">Strict</span>
+          </div>
+          <div class="crp-card-body">
+            <ul class="list-group list-group-flush small mb-3">
+              <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                <span class="text-muted">Minimum CGPA Required</span>
+                <span class="fw-bold text-dark" id="drive-elig-cgpa">7.5 CGPA</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                <span class="text-muted">Maximum Active Backlogs</span>
+                <span class="fw-bold text-dark" id="drive-elig-backlogs">0</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                <span class="text-muted">10th Class Percentage</span>
+                <span class="fw-bold text-dark" id="drive-elig-tenth">70%</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                <span class="text-muted">12th / Diploma Percentage</span>
+                <span class="fw-bold text-dark" id="drive-elig-twelfth">70%</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                <span class="text-muted">Graduation Batch</span>
+                <span class="fw-bold text-dark" id="drive-elig-batch">2026</span>
+              </li>
+            </ul>
+
+            <div class="mb-3">
+              <span class="text-muted small fw-bold d-block mb-1">Eligible Degrees:</span>
+              <div id="drive-elig-degrees" class="d-flex flex-wrap"></div>
+            </div>
+
+            <div class="mb-3">
+              <span class="text-muted small fw-bold d-block mb-1">Eligible Academic Departments:</span>
+              <div id="drive-elig-depts" class="d-flex flex-wrap gap-1"></div>
+            </div>
+
+            <button class="btn btn-outline-primary btn-sm w-100 mt-2" onclick="StudentApp.checkEligibility(new URLSearchParams(window.location.search).get('id'))">
+              <i class="bi bi-check2-circle me-1"></i> Verify My Eligibility Against This Drive
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/student.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      CRP.renderNavbar('seasonal-calendar');
+      CRP.renderFooter();
+      await StudentApp.initDriveDetails();
+    });
+  </script>
+</body>
+</html>

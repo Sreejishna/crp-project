@@ -1,0 +1,150 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/alerts') %>
+
+<main class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+      <div>
+        <h2 class="fw-bold text-dark mb-1">
+          <i class="bi bi-diagram-3 text-primary me-2"></i> Placement Preparation Roadmaps
+        </h2>
+        <p class="text-muted small mb-0">
+          Curated technical curricula, core subjects review, and behavioral frameworks for seasonal hiring drives
+        </p>
+      </div>
+      <a href="/student/dashboard" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left me-1"></i> Dashboard
+      </a>
+    </div>
+
+    <!-- 4 Main Roadmap Pillars -->
+    <div class="row g-4 mb-5">
+      
+      <!-- Pillar 1: DSA Mastery -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card card-crp h-100 p-4 border-top border-4 border-primary">
+          <div class="stat-icon bg-primary text-white rounded mb-3">
+            <i class="bi bi-code-square fs-4"></i>
+          </div>
+          <h5 class="fw-bold text-dark mb-2">1. Data Structures & Algorithms</h5>
+          <p class="text-muted small mb-3">Targeted for Online OA Coding Tests and Technical Round 1.</p>
+          <ul class="text-muted small ps-3 mb-0">
+            <li>Arrays, Sliding Window, Two Pointers</li>
+            <li>Binary Search & Matrix Problems</li>
+            <li>Binary Trees & Binary Search Trees</li>
+            <li>Graph BFS/DFS & Dijkstra</li>
+            <li>Dynamic Programming (1D & 2D)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Pillar 2: Full Stack Engineering -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card card-crp h-100 p-4 border-top border-4 border-success">
+          <div class="stat-icon bg-success text-white rounded mb-3">
+            <i class="bi bi-layers fs-4"></i>
+          </div>
+          <h5 class="fw-bold text-dark mb-2">2. Software Engineering</h5>
+          <p class="text-muted small mb-3">For Machine Coding, LLD, and Technical Round 2.</p>
+          <ul class="text-muted small ps-3 mb-0">
+            <li>RESTful API Architecture & Status Codes</li>
+            <li>Node.js / Express or Spring Boot</li>
+            <li>Relational DB (SQL) vs Document DB</li>
+            <li>SOLID Principles & Design Patterns</li>
+            <li>JWT Auth & Session Management</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Pillar 3: Core CS Fundamentals -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card card-crp h-100 p-4 border-top border-4 border-warning">
+          <div class="stat-icon bg-warning text-dark rounded mb-3">
+            <i class="bi bi-cpu fs-4"></i>
+          </div>
+          <h5 class="fw-bold text-dark mb-2">3. Core CS Subjects</h5>
+          <p class="text-muted small mb-3">Fundamental theory asked across all Tier-1 interviews.</p>
+          <ul class="text-muted small ps-3 mb-0">
+            <li>OS: Process vs Thread, Deadlocks, Mutex</li>
+            <li>DBMS: ACID, Normalization, Indexing</li>
+            <li>CN: TCP 3-Way Handshake, DNS, HTTP/HTTPS</li>
+            <li>OOP: Polymorphism, Encapsulation, Abstraction</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Pillar 4: Behavioral STAR Method -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card card-crp h-100 p-4 border-top border-4 border-info">
+          <div class="stat-icon bg-info text-white rounded mb-3">
+            <i class="bi bi-chat-quote fs-4"></i>
+          </div>
+          <h5 class="fw-bold text-dark mb-2">4. HR & Culture Fit</h5>
+          <p class="text-muted small mb-3">Bar Raiser and Managerial rounds evaluation.</p>
+          <ul class="text-muted small ps-3 mb-0">
+            <li><strong>S</strong>ituation: Background context</li>
+            <li><strong>T</strong>ask: Challenge faced</li>
+            <li><strong>A</strong>ction: Precise steps you took</li>
+            <li><strong>R</strong>esult: Quantified impact</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Structured 8-Week Preparation Timeline -->
+    <div class="card card-crp p-4 p-md-5 mb-4">
+      <h4 class="fw-bold text-dark mb-4">
+        <i class="bi bi-calendar-range text-primary me-2"></i> Recommended 8-Week Seasonal Sprint
+      </h4>
+
+      <div class="table-responsive">
+        <table class="table table-hover table-crp align-middle mb-0">
+          <thead>
+            <tr>
+              <th style="width: 15%;">Week</th>
+              <th style="width: 25%;">Focus Area</th>
+              <th style="width: 45%;">Curriculum & Practice Topics</th>
+              <th style="width: 15%;">Target Benchmark</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge bg-primary">Weeks 1 – 2</span></td>
+              <td><strong>DSA Foundations</strong></td>
+              <td class="small text-muted">Arrays, Strings, Recursion, Time & Space Complexity Big-O, Sorting & Searching</td>
+              <td><span class="badge bg-success-subtle text-success">50 LeetCode Easy</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge bg-primary">Weeks 3 – 4</span></td>
+              <td><strong>Advanced Data Structures</strong></td>
+              <td class="small text-muted">Linked Lists, Stacks, Queues, Binary Trees, Traversals (Pre/In/Post/Level Order), Heaps</td>
+              <td><span class="badge bg-success-subtle text-success">40 LeetCode Medium</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge bg-primary">Weeks 5 – 6</span></td>
+              <td><strong>Graphs & DP Mastery</strong></td>
+              <td class="small text-muted">Graph BFS/DFS, Topological Sort, 0/1 Knapsack, Longest Common Subsequence, Grid DP</td>
+              <td><span class="badge bg-success-subtle text-success">35 LeetCode Medium/Hard</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge bg-primary">Week 7</span></td>
+              <td><strong>Core CS & Schema Design</strong></td>
+              <td class="small text-muted">DBMS Queries (Joins, Aggregations), Indexing internals, OS Threading, Memory layouts</td>
+              <td><span class="badge bg-info-subtle text-info">Mock Assessment</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge bg-primary">Week 8</span></td>
+              <td><strong>Mock Interviews & STAR</strong></td>
+              <td class="small text-muted">Live Coding practice aloud, STAR story articulation, Resume project defense</td>
+              <td><span class="badge bg-warning-subtle text-dark">Ready for Drive</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

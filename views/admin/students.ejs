@@ -1,0 +1,133 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/alerts') %>
+
+<main class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+      <div>
+        <h2 class="fw-bold text-dark mb-1">
+          <i class="bi bi-people text-primary me-2"></i> Student Records Management
+        </h2>
+        <p class="text-muted small mb-0">Total College Enrolled Students: <strong><%= students.length %></strong></p>
+      </div>
+      <div class="d-flex gap-2">
+        <a href="/admin/dashboard" class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-arrow-left me-1"></i> Dashboard
+        </a>
+        <a href="/admin/students/new" class="btn btn-crp-primary btn-sm">
+          <i class="bi bi-person-plus me-1"></i> Add New Student
+        </a>
+      </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="card card-crp p-3 mb-4">
+      <form action="/admin/students" method="GET" class="row g-2 align-items-center">
+        <div class="col-md-5">
+          <div class="input-group">
+            <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+            <input
+              type="text"
+              class="form-control"
+              name="search"
+              placeholder="Search by student name, ID, or email..."
+              value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+            >
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <select class="form-select" name="department" onchange="this.form.submit()">
+            <option value="All" <%= selectedDepartment === 'All' ? 'selected' : '' %>>-- All Departments --</option>
+            <% if (departments && departments.length > 0) { %>
+              <% departments.forEach(dept => { %>
+                <option value="<%= dept._id %>" <%= selectedDepartment === dept._id.toString() ? 'selected' : '' %>>
+                  <%= dept.name %> (<%= dept.code %>)
+                </option>
+              <% }) %>
+            <% } %>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <select class="form-select" name="status" onchange="this.form.submit()">
+            <option value="All" <%= selectedStatus === 'All' ? 'selected' : '' %>>-- All Statuses --</option>
+            <option value="Placed" <%= selectedStatus === 'Placed' ? 'selected' : '' %>>Placed</option>
+            <option value="Not Placed" <%= selectedStatus === 'Not Placed' ? 'selected' : '' %>>Not Placed</option>
+          </select>
+        </div>
+
+        <div class="col-md-1">
+          <a href="/admin/students" class="btn btn-outline-secondary w-100">Reset</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Students Table -->
+    <div class="table-responsive bg-white rounded border shadow-sm">
+      <table class="table table-hover table-crp align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Student ID / USN</th>
+            <th>Name & Email</th>
+            <th>Department</th>
+            <th>CGPA</th>
+            <th>Active Backlogs</th>
+            <th>Status</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (students && students.length > 0) { %>
+            <% students.forEach(s => { %>
+              <tr>
+                <td><strong class="text-dark"><%= s.studentId %></strong></td>
+                <td>
+                  <div class="fw-semibold text-dark"><%= s.name %></div>
+                  <small class="text-muted"><%= s.email %></small>
+                </td>
+                <td><span class="badge bg-light text-primary border"><%= s.department ? s.department.code : 'MCA' %></span></td>
+                <td><strong class="text-primary"><%= s.cgpa.toFixed(2) %></strong></td>
+                <td>
+                  <% if (s.activeBacklogs === 0) { %>
+                    <span class="badge bg-success-subtle text-success">0</span>
+                  <% } else { %>
+                    <span class="badge bg-danger-subtle text-danger"><%= s.activeBacklogs %></span>
+                  <% } %>
+                </td>
+                <td>
+                  <span class="badge <%= s.placementStatus === 'Placed' ? 'bg-success' : 'bg-secondary' %>">
+                    <%= s.placementStatus %>
+                  </span>
+                </td>
+                <td class="text-end">
+                  <div class="d-inline-flex gap-1">
+                    <a href="/admin/students/<%= s._id %>/edit" class="btn btn-outline-secondary btn-sm" title="Edit Student">
+                      <i class="bi bi-pencil"></i>
+                    </a>
+                    <form action="/admin/students/<%= s._id %>/delete" method="POST" onsubmit="return confirmDelete('Delete student <%= s.name %>?');">
+                      <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete Student">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="7" class="text-center py-5 text-muted">
+                <i class="bi bi-people fs-1 d-block mb-2"></i>
+                No students found.
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

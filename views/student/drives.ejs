@@ -1,0 +1,173 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/alerts') %>
+
+<main class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+      <div>
+        <h2 class="fw-bold text-dark mb-1">
+          <i class="bi bi-briefcase text-primary me-2"></i> Seasonal Recruitment Drives & Cutoffs
+        </h2>
+        <p class="text-muted small mb-0">
+          Real-time verification of your academic profile against company cutoffs
+        </p>
+      </div>
+      <div>
+        <span class="badge bg-light text-dark border p-2">
+          Your CGPA: <strong><%= student ? student.cgpa : 'N/A' %></strong> | Backlogs: <strong><%= student ? student.activeBacklogs : 0 %></strong>
+        </span>
+      </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="card card-crp p-3 mb-4">
+      <form action="/student/drives" method="GET" class="row g-2 align-items-center">
+        <div class="col-md-5">
+          <div class="input-group">
+            <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+            <input
+              type="text"
+              class="form-control"
+              name="search"
+              placeholder="Search by role, company, or required skill..."
+              value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+            >
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <select class="form-select" name="season" onchange="this.form.submit()">
+            <option value="All" <%= selectedSeason === 'All' ? 'selected' : '' %>>-- All Hiring Seasons --</option>
+            <option value="January–March" <%= selectedSeason === 'January–March' ? 'selected' : '' %>>Q1 (Jan – Mar)</option>
+            <option value="April–June" <%= selectedSeason === 'April–June' ? 'selected' : '' %>>Q2 (Apr – Jun)</option>
+            <option value="July–September" <%= selectedSeason === 'July–September' ? 'selected' : '' %>>Q3 (Jul – Sep)</option>
+            <option value="October–December" <%= selectedSeason === 'October–December' ? 'selected' : '' %>>Q4 (Oct – Dec)</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <select class="form-select" name="status" onchange="this.form.submit()">
+            <option value="All" <%= selectedStatus === 'All' ? 'selected' : '' %>>-- All Statuses --</option>
+            <option value="Active" <%= selectedStatus === 'Active' ? 'selected' : '' %>>Active</option>
+            <option value="Upcoming" <%= selectedStatus === 'Upcoming' ? 'selected' : '' %>>Upcoming</option>
+            <option value="Closed" <%= selectedStatus === 'Closed' ? 'selected' : '' %>>Closed</option>
+          </select>
+        </div>
+
+        <div class="col-md-1">
+          <button type="submit" class="btn btn-crp-primary w-100">
+            <i class="bi bi-filter"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Drives List -->
+    <div class="row g-4">
+      <% if (drives && drives.length > 0) { %>
+        <% drives.forEach(drive => { %>
+          <%
+            let isEligible = true;
+            const reasons = [];
+
+            if (student) {
+              if (student.cgpa < drive.minCgpa) {
+                isEligible = false;
+                reasons.push(`CGPA (${student.cgpa}) is below ${drive.minCgpa}`);
+              }
+              if (student.activeBacklogs > drive.maxBacklogs) {
+                isEligible = false;
+                reasons.push(`Backlogs (${student.activeBacklogs}) exceed max ${drive.maxBacklogs}`);
+              }
+              const deptMatch = drive.eligibleDepartments.some(d => d._id.toString() === student.department._id.toString());
+              if (!deptMatch) {
+                isEligible = false;
+                reasons.push('Department not in eligible list');
+              }
+            }
+          %>
+          <div class="col-12">
+            <div class="card card-crp p-4 <%= isEligible ? 'border-success-subtle' : 'border-warning-subtle' %>">
+              <div class="row align-items-center g-3">
+                <div class="col-lg-8">
+                  <div class="d-flex align-items-center gap-2 flex-wrap mb-2">
+                    <span class="badge <%= drive.seasonQuarter === 'Q1' ? 'badge-season-q1' : drive.seasonQuarter === 'Q2' ? 'badge-season-q2' : drive.seasonQuarter === 'Q3' ? 'badge-season-q3' : 'badge-season-q4' %>">
+                      <%= drive.hiringSeason %> (<%= drive.seasonQuarter %>)
+                    </span>
+                    <span class="badge <%= drive.status === 'Active' ? 'badge-status-active' : drive.status === 'Upcoming' ? 'badge-status-upcoming' : 'badge-status-closed' %>">
+                      <%= drive.status %>
+                    </span>
+                    <span class="badge bg-light text-muted border">
+                      <i class="bi bi-geo-alt"></i> <%= drive.workLocation %> (<%= drive.workMode %>)
+                    </span>
+                  </div>
+
+                  <h4 class="fw-bold text-dark mb-1">
+                    <%= drive.jobRole %> 
+                    <span class="text-muted fs-6 fw-normal">at <%= drive.company ? drive.company.name : 'Company' %></span>
+                  </h4>
+
+                  <p class="text-muted small mb-2">
+                    <i class="bi bi-cash-stack text-success me-1"></i> Package: <strong class="text-dark"><%= drive.salary %></strong> |
+                    <i class="bi bi-person-fill-check text-primary me-1"></i> Vacancies: <strong><%= drive.vacancies %></strong> |
+                    <i class="bi bi-calendar-event me-1"></i> Dates: <strong><%= new Date(drive.startDate).toLocaleDateString() %> – <%= new Date(drive.endDate).toLocaleDateString() %></strong>
+                  </p>
+
+                  <div class="d-flex flex-wrap gap-1 mb-2">
+                    <% drive.requiredSkills.forEach(s => { %>
+                      <span class="badge bg-light text-dark border small"><%= s %></span>
+                    <% }) %>
+                  </div>
+                </div>
+
+                <!-- Eligibility Assessment Card -->
+                <div class="col-lg-4 text-lg-end">
+                  <% if (student) { %>
+                    <% if (isEligible) { %>
+                      <div class="alert alert-success d-inline-block text-start p-2 mb-2 w-100">
+                        <div class="fw-bold small text-success">
+                          <i class="bi bi-check-circle-fill me-1"></i> Academic Cutoff: Eligible
+                        </div>
+                        <small class="text-muted d-block" style="font-size: 0.8rem;">
+                          Your CGPA <%= student.cgpa %> ≥ <%= drive.minCgpa %> | Backlogs: 0
+                        </small>
+                      </div>
+                    <% } else { %>
+                      <div class="alert alert-warning d-inline-block text-start p-2 mb-2 w-100">
+                        <div class="fw-bold small text-dark">
+                          <i class="bi bi-exclamation-triangle-fill text-warning me-1"></i> Ineligible for Cutoff
+                        </div>
+                        <small class="text-danger d-block" style="font-size: 0.8rem;">
+                          <%= reasons.join(', ') %>
+                        </small>
+                      </div>
+                    <% } %>
+                  <% } %>
+
+                  <div>
+                    <a href="/companies/<%= drive.company ? drive.company._id : '#' %>" class="btn btn-crp-primary btn-sm px-3">
+                      <i class="bi bi-eye me-1"></i> Full Round Details
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <div class="col-12">
+          <div class="alert alert-light border text-center py-5 shadow-sm">
+            <i class="bi bi-calendar-x fs-1 text-muted d-block mb-3"></i>
+            <h5 class="fw-bold text-dark">No matching recruitment drives found</h5>
+            <p class="text-muted small">Try modifying your season or status filters.</p>
+            <a href="/student/drives" class="btn btn-outline-primary btn-sm">Reset Filters</a>
+          </div>
+        </div>
+      <% } %>
+    </div>
+
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

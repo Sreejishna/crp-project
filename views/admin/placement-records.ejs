@@ -1,0 +1,138 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/alerts') %>
+
+<main class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+      <div>
+        <h2 class="fw-bold text-dark mb-1">
+          <i class="bi bi-award text-warning me-2"></i> Placement Records Management
+        </h2>
+        <p class="text-muted small mb-0">Record and verify confirmed campus offers and salary packages</p>
+      </div>
+      <a href="/admin/dashboard" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left me-1"></i> Dashboard
+      </a>
+    </div>
+
+    <div class="row g-4">
+      <!-- Records Table Column -->
+      <div class="col-lg-8">
+        <div class="table-responsive bg-white rounded border shadow-sm">
+          <table class="table table-hover table-crp align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Department</th>
+                <th>Company & Role</th>
+                <th>Package</th>
+                <th>Date</th>
+                <th class="text-end">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (records && records.length > 0) { %>
+                <% records.forEach(r => { %>
+                  <tr>
+                    <td>
+                      <strong class="text-dark"><%= r.student ? r.student.name : 'Student' %></strong>
+                      <small class="d-block text-muted"><%= r.student ? r.student.studentId : '' %></small>
+                    </td>
+                    <td>
+                      <span class="badge bg-light text-primary border">
+                        <%= r.student && r.student.department ? r.student.department.code : 'MCA' %>
+                      </span>
+                    </td>
+                    <td>
+                      <div class="fw-semibold text-dark"><%= r.company ? r.company.name : 'Company' %></div>
+                      <small class="text-primary"><%= r.jobRole %></small>
+                    </td>
+                    <td><strong class="text-success"><%= r.package %></strong></td>
+                    <td><%= new Date(r.placedDate).toLocaleDateString() %></td>
+                    <td class="text-end">
+                      <form action="/admin/placements/<%= r._id %>/delete" method="POST" onsubmit="return confirmDelete('Delete placement record for <%= r.student ? r.student.name : '' %>?');" class="d-inline">
+                        <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr>
+                  <td colspan="6" class="text-center py-5 text-muted">
+                    <i class="bi bi-trophy fs-1 d-block mb-2"></i>
+                    No placement records found.
+                  </td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Add Placement Record Form Column -->
+      <div class="col-lg-4">
+        <div class="card card-crp p-4">
+          <h5 class="fw-bold text-dark mb-3">
+            <i class="bi bi-plus-circle text-success me-1"></i> Record Student Placement
+          </h5>
+          <form action="/admin/placements" method="POST">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-muted">Select Student *</label>
+              <select class="form-select" name="student" required>
+                <option value="">-- Choose Student --</option>
+                <% if (students && students.length > 0) { %>
+                  <% students.forEach(s => { %>
+                    <option value="<%= s._id %>">
+                      <%= s.name %> (<%= s.studentId %> - <%= s.department ? s.department.code : '' %>)
+                    </option>
+                  <% }) %>
+                <% } %>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-muted">Recruiter Company *</label>
+              <select class="form-select" name="company" required>
+                <option value="">-- Choose Company --</option>
+                <% if (companies && companies.length > 0) { %>
+                  <% companies.forEach(c => { %>
+                    <option value="<%= c._id %>"><%= c.name %></option>
+                  <% }) %>
+                <% } %>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-muted">Job Role / Designation *</label>
+              <input type="text" class="form-control" name="jobRole" required placeholder="e.g. SDE-1">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-muted">Compensation Package (CTC) *</label>
+              <input type="text" class="form-control fw-bold text-success" name="package" required placeholder="e.g. 24.5 LPA">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-muted">Offer Status</label>
+              <select class="form-select" name="placementStatus">
+                <option value="Placed">Placed</option>
+                <option value="Selected">Selected</option>
+                <option value="Offer Accepted">Offer Accepted</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-success w-100 py-2 fw-semibold">
+              <i class="bi bi-check-circle me-1"></i> Record Placement Offer
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

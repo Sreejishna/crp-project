@@ -1,0 +1,216 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/alerts') %>
+
+<main class="py-5">
+  <div class="container">
+    <!-- Student Header Welcome -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+      <div>
+        <span class="badge bg-primary-subtle text-primary fw-bold px-3 py-1 rounded-pill mb-2">
+          <i class="bi bi-mortarboard-fill me-1"></i> Student Placement Module
+        </span>
+        <h2 class="fw-bold text-dark mb-0">Welcome, <%= student ? student.name : user.name %></h2>
+        <p class="text-muted small mb-0">
+          ID: <strong><%= student ? student.studentId : '' %></strong> | 
+          Department: <strong><%= student && student.department ? student.department.name : 'MCA' %></strong> | 
+          CGPA: <strong class="text-primary"><%= student ? student.cgpa : '0.0' %></strong>
+        </p>
+      </div>
+      <div>
+        <a href="/student/profile" class="btn btn-outline-primary btn-sm fw-semibold">
+          <i class="bi bi-person-gear me-1"></i> Edit Academic Profile
+        </a>
+      </div>
+    </div>
+
+    <!-- Informational Architecture Banner -->
+    <div class="info-principle-banner mb-4 shadow-sm">
+      <div class="d-flex align-items-center gap-3">
+        <i class="bi bi-shield-check fs-2 text-primary"></i>
+        <div>
+          <h6 class="fw-bold mb-1">Informational Intelligence & Verification Portal</h6>
+          <p class="mb-0 small text-muted">
+            You can verify your eligibility against company cutoffs, review salary packages, and study interview roadmaps. As per placement cell policy, online job applications are handled through formal college drive rosters, not this portal.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 Dashboard Metric Tiles -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <span class="text-muted small fw-semibold">Registered Companies</span>
+              <h3 class="fw-bold text-dark mb-0 mt-1"><%= totalCompanies %></h3>
+            </div>
+            <div class="stat-icon bg-primary-subtle text-primary">
+              <i class="bi bi-buildings"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <span class="text-muted small fw-semibold">Active Hiring Drives</span>
+              <h3 class="fw-bold text-success mb-0 mt-1"><%= activeDrives %></h3>
+            </div>
+            <div class="stat-icon bg-success-subtle text-success">
+              <i class="bi bi-play-circle"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <span class="text-muted small fw-semibold">Upcoming Drives</span>
+              <h3 class="fw-bold text-info mb-0 mt-1"><%= upcomingDrives %></h3>
+            </div>
+            <div class="stat-icon bg-info-subtle text-info">
+              <i class="bi bi-calendar-event"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <span class="text-muted small fw-semibold">Placement Status</span>
+              <h5 class="fw-bold mb-0 mt-1 <%= student && student.placementStatus === 'Placed' ? 'text-success' : 'text-secondary' %>">
+                <%= student ? student.placementStatus : 'Not Placed' %>
+              </h5>
+            </div>
+            <div class="stat-icon bg-secondary-subtle text-secondary">
+              <i class="bi bi-award"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Area: Drives & Announcements -->
+    <div class="row g-4">
+      <!-- Active & Upcoming Drives Column -->
+      <div class="col-lg-8">
+        <div class="card card-crp p-4 h-100">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold text-dark mb-0">
+              <i class="bi bi-calendar-check text-primary me-2"></i> Current Seasonal Recruitment Drives
+            </h5>
+            <a href="/student/drives" class="btn btn-sm btn-outline-primary fw-semibold">
+              View All Drives <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+
+          <% if (featuredDrives && featuredDrives.length > 0) { %>
+            <div class="row g-3">
+              <% featuredDrives.forEach(drive => { %>
+                <%
+                  const isEligible = student && student.cgpa >= drive.minCgpa && student.activeBacklogs <= drive.maxBacklogs;
+                %>
+                <div class="col-12">
+                  <div class="border rounded p-3 bg-light-subtle d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div>
+                      <div class="d-flex align-items-center gap-2 mb-1">
+                        <strong class="text-dark"><%= drive.company ? drive.company.name : 'Company' %></strong>
+                        <span class="badge <%= drive.seasonQuarter === 'Q1' ? 'badge-season-q1' : drive.seasonQuarter === 'Q2' ? 'badge-season-q2' : drive.seasonQuarter === 'Q3' ? 'badge-season-q3' : 'badge-season-q4' %>">
+                          <%= drive.hiringSeason %>
+                        </span>
+                        <span class="badge <%= drive.status === 'Active' ? 'badge-status-active' : 'badge-status-upcoming' %>">
+                          <%= drive.status %>
+                        </span>
+                      </div>
+                      <p class="mb-1 text-primary fw-semibold small"><%= drive.jobRole %></p>
+                      <small class="text-muted d-block">
+                        Package: <strong class="text-success"><%= drive.salary %></strong> | Cutoff: <strong><%= drive.minCgpa %> CGPA</strong> | Backlogs: Max <%= drive.maxBacklogs %>
+                      </small>
+                    </div>
+
+                    <div class="text-end">
+                      <% if (isEligible) { %>
+                        <span class="badge bg-success-subtle text-success border border-success mb-2 d-block">
+                          <i class="bi bi-check-circle me-1"></i> Eligible
+                        </span>
+                      <% } else { %>
+                        <span class="badge bg-warning-subtle text-dark border border-warning mb-2 d-block">
+                          <i class="bi bi-exclamation-triangle me-1"></i> Below Cutoff
+                        </span>
+                      <% } %>
+                      <a href="/companies/<%= drive.company ? drive.company._id : '#' %>" class="btn btn-sm btn-primary">
+                        View Details
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              <% }) %>
+            </div>
+          <% } else { %>
+            <p class="text-muted small py-4 text-center">No active recruitment drives scheduled right now.</p>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Announcements & Quick Links Column -->
+      <div class="col-lg-4">
+        <!-- Announcements Card -->
+        <div class="card card-crp p-4 mb-4">
+          <h5 class="fw-bold text-dark mb-3">
+            <i class="bi bi-megaphone-fill text-danger me-2"></i> Placement Cell Notices
+          </h5>
+          <% if (announcements && announcements.length > 0) { %>
+            <div class="d-flex flex-column gap-3">
+              <% announcements.forEach(ann => { %>
+                <div class="border-bottom pb-2">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <strong class="text-dark small"><%= ann.title %></strong>
+                    <span class="badge <%= ann.priority === 'Urgent' ? 'bg-danger' : ann.priority === 'High' ? 'bg-warning text-dark' : 'bg-secondary' %> small">
+                      <%= ann.priority %>
+                    </span>
+                  </div>
+                  <p class="text-muted small mb-1"><%= ann.description %></p>
+                  <small class="text-secondary" style="font-size: 0.75rem;">
+                    <i class="bi bi-clock"></i> <%= new Date(ann.date).toLocaleDateString() %>
+                  </small>
+                </div>
+              <% }) %>
+            </div>
+          <% } else { %>
+            <p class="text-muted small text-center py-3">No announcements at this time.</p>
+          <% } %>
+        </div>
+
+        <!-- Quick Access Shortcuts -->
+        <div class="card card-crp p-4">
+          <h6 class="fw-bold text-dark mb-3"><i class="bi bi-lightning-charge-fill text-warning me-1"></i> Quick Shortcuts</h6>
+          <div class="d-grid gap-2">
+            <a href="/student/roadmaps" class="btn btn-outline-primary btn-sm text-start py-2">
+              <i class="bi bi-diagram-3 me-2"></i> Skill & Interview Roadmaps
+            </a>
+            <a href="/seasonal-calendar" class="btn btn-outline-primary btn-sm text-start py-2">
+              <i class="bi bi-calendar3 me-2"></i> Annual Seasonal Calendar
+            </a>
+            <a href="/companies" class="btn btn-outline-primary btn-sm text-start py-2">
+              <i class="bi bi-search me-2"></i> Search Companies Catalog
+            </a>
+            <a href="/student/profile" class="btn btn-outline-primary btn-sm text-start py-2">
+              <i class="bi bi-pencil-square me-2"></i> Update CGPA & Skill Sets
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

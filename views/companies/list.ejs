@@ -1,0 +1,129 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/alerts') %>
+
+<main class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+      <div>
+        <h2 class="fw-bold text-dark mb-1">
+          <i class="bi bi-buildings text-primary me-2"></i> Seasonal Companies Catalog
+        </h2>
+        <p class="text-muted mb-0">
+          Explore registered campus recruitment partners across seasonal hiring cycles
+        </p>
+      </div>
+      <div>
+        <a href="/seasonal-calendar" class="btn btn-outline-primary btn-sm fw-semibold">
+          <i class="bi bi-calendar3 me-1"></i> View Annual Calendar
+        </a>
+      </div>
+    </div>
+
+    <!-- Search & Filter Bar -->
+    <div class="card card-crp p-3 mb-4">
+      <form action="/companies" method="GET" class="row g-2 align-items-center">
+        <div class="col-md-5">
+          <div class="input-group">
+            <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+            <input
+              type="text"
+              class="form-control"
+              name="search"
+              placeholder="Search by company name, industry, or tech..."
+              value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+            >
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <select class="form-select" name="season" onchange="this.form.submit()">
+            <option value="All" <%= selectedSeason === 'All' ? 'selected' : '' %>>-- All Hiring Seasons --</option>
+            <option value="January–March" <%= selectedSeason === 'January–March' ? 'selected' : '' %>>Q1 (Jan – Mar)</option>
+            <option value="April–June" <%= selectedSeason === 'April–June' ? 'selected' : '' %>>Q2 (Apr – Jun)</option>
+            <option value="July–September" <%= selectedSeason === 'July–September' ? 'selected' : '' %>>Q3 (Jul – Sep)</option>
+            <option value="October–December" <%= selectedSeason === 'October–December' ? 'selected' : '' %>>Q4 (Oct – Dec)</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <select class="form-select" name="industry" onchange="this.form.submit()">
+            <option value="All" <%= selectedIndustry === 'All' ? 'selected' : '' %>>-- All Industries --</option>
+            <% if (typeof allIndustries !== 'undefined' && allIndustries) { %>
+              <% allIndustries.forEach(ind => { %>
+                <option value="<%= ind %>" <%= selectedIndustry === ind ? 'selected' : '' %>><%= ind %></option>
+              <% }) %>
+            <% } %>
+          </select>
+        </div>
+
+        <div class="col-md-1">
+          <button type="submit" class="btn btn-crp-primary w-100">
+            <i class="bi bi-filter"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Company Grid -->
+    <div class="row g-4">
+      <% if (companies && companies.length > 0) { %>
+        <% companies.forEach(company => { %>
+          <% 
+            const companyDrives = drives.filter(d => d.company && d.company._id.toString() === company._id.toString());
+          %>
+          <div class="col-md-6 col-lg-4">
+            <div class="card card-crp h-100 p-4 d-flex flex-column">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <span class="badge bg-light text-primary border fw-semibold">
+                  <%= company.industry %>
+                </span>
+                <span class="badge bg-secondary-subtle text-secondary small">
+                  <%= company.tier %>
+                </span>
+              </div>
+
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="rounded-3 bg-light border d-flex align-items-center justify-content-center" style="width: 52px; height: 52px;">
+                  <i class="bi bi-building fs-3 text-primary"></i>
+                </div>
+                <div>
+                  <h5 class="fw-bold text-dark mb-0"><%= company.name %></h5>
+                  <small class="text-muted"><i class="bi bi-geo-alt"></i> <%= company.headquarters %></small>
+                </div>
+              </div>
+
+              <p class="text-muted small mb-3 flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                <%= company.description %>
+              </p>
+
+              <!-- Associated Seasonal Drives Counter -->
+              <div class="bg-light p-2 rounded mb-3 small d-flex justify-content-between align-items-center">
+                <span class="text-muted"><i class="bi bi-calendar-event me-1"></i> Active Drives:</span>
+                <span class="badge bg-primary rounded-pill"><%= companyDrives.length %> Scheduled</span>
+              </div>
+
+              <div class="mt-auto pt-2 border-top">
+                <a href="/companies/<%= company._id %>" class="btn btn-crp-primary btn-sm w-100 fw-semibold">
+                  <i class="bi bi-eye me-1"></i> View Roles & Eligibility Criteria
+                </a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <div class="col-12">
+          <div class="alert alert-light border text-center py-5 shadow-sm">
+            <i class="bi bi-search fs-1 text-muted d-block mb-3"></i>
+            <h5 class="fw-bold text-dark">No companies found</h5>
+            <p class="text-muted small">Try broadening your search term or seasonal filter criteria.</p>
+            <a href="/companies" class="btn btn-outline-primary btn-sm">Reset Filters</a>
+          </div>
+        </div>
+      <% } %>
+    </div>
+
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

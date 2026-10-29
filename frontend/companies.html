@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seasonal Companies Directory | Cyclic Recruitment Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-light">
+
+  <div id="navbar-container"></div>
+
+  <!-- Page Header -->
+  <div class="bg-white border-bottom py-4">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+          <h2 class="fw-bold mb-1 text-dark"><i class="bi bi-buildings text-primary me-2"></i> Seasonal Hiring Companies</h2>
+          <p class="text-muted small mb-0">Browse recruiting companies categorized by seasonal cycles, tier packages, and eligibility criteria.</p>
+        </div>
+        <span class="badge bg-primary-subtle text-primary border px-3 py-2 rounded-pill fw-bold" id="company-count-badge">Loading Companies...</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container py-4">
+    <!-- Filter Card -->
+    <div class="crp-card p-3 mb-4">
+      <div class="row g-2 align-items-center">
+        <!-- Search Input -->
+        <div class="col-lg-4 col-md-6">
+          <div class="search-pill-box">
+            <i class="bi bi-search text-muted me-2"></i>
+            <input type="text" id="search-company-input" class="search-pill-input" placeholder="Search company by name, industry, skill...">
+          </div>
+        </div>
+
+        <!-- Season Quarter Filter -->
+        <div class="col-lg-2 col-md-3 col-6">
+          <select id="filter-season" class="form-select form-select-sm rounded-pill">
+            <option value="All">All Hiring Seasons</option>
+            <option value="January">Q1: Jan - Mar</option>
+            <option value="April">Q2: Apr - Jun</option>
+            <option value="July">Q3: Jul - Sep</option>
+            <option value="October">Q4: Oct - Dec</option>
+          </select>
+        </div>
+
+        <!-- Quarter Code -->
+        <div class="col-lg-2 col-md-3 col-6">
+          <select id="filter-quarter" class="form-select form-select-sm rounded-pill">
+            <option value="All">All Quarters (Q1-Q4)</option>
+            <option value="Q1">Q1 Cycle</option>
+            <option value="Q2">Q2 Cycle</option>
+            <option value="Q3">Q3 Mega Cycle</option>
+            <option value="Q4">Q4 Winter Cycle</option>
+          </select>
+        </div>
+
+        <!-- Tier Package Filter -->
+        <div class="col-lg-2 col-md-4 col-6">
+          <select id="filter-tier" class="form-select form-select-sm rounded-pill">
+            <option value="All">All Tier Packages</option>
+            <option value="Super Dream (15+ LPA)">Super Dream (15+ LPA)</option>
+            <option value="Dream (8-15 LPA)">Dream (8-15 LPA)</option>
+            <option value="Tier-1 Core (5-8 LPA)">Tier-1 (5-8 LPA)</option>
+          </select>
+        </div>
+
+        <!-- Recruitment Status Filter -->
+        <div class="col-lg-2 col-md-4 col-6">
+          <select id="filter-status" class="form-select form-select-sm rounded-pill">
+            <option value="All">All Drive Status</option>
+            <option value="Upcoming">Upcoming</option>
+            <option value="Registration Open">Registration Open</option>
+            <option value="Active / In Progress">Active / In Progress</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Company Grid -->
+    <div class="row" id="company-list-grid">
+      <div class="col-12 text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="text-muted mt-2">Loading Seasonal Companies...</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/student.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      CRP.renderNavbar('companies');
+      CRP.renderFooter();
+      await StudentApp.initCompanyDirectory();
+    });
+  </script>
+</body>
+</html>

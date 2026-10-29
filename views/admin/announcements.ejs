@@ -1,0 +1,106 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/alerts') %>
+
+<main class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+      <div>
+        <h2 class="fw-bold text-dark mb-1">
+          <i class="bi bi-megaphone text-danger me-2"></i> Placement Cell Announcements Broadcast
+        </h2>
+        <p class="text-muted small mb-0">Publish priority notices, drive schedules, and mock interview alerts to students and coordinators</p>
+      </div>
+      <a href="/admin/dashboard" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left me-1"></i> Dashboard
+      </a>
+    </div>
+
+    <div class="row g-4">
+      <!-- Announcements List Column -->
+      <div class="col-lg-7">
+        <div class="card card-crp p-4 h-100">
+          <h5 class="fw-bold text-dark mb-3">Published Announcements (<%= announcements.length %>)</h5>
+          <% if (announcements && announcements.length > 0) { %>
+            <div class="d-flex flex-column gap-3">
+              <% announcements.forEach(a => { %>
+                <div class="border rounded p-3 bg-light-subtle">
+                  <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                      <h6 class="fw-bold text-dark mb-0"><%= a.title %></h6>
+                      <small class="text-muted">
+                        <i class="bi bi-clock me-1"></i> <%= new Date(a.date).toLocaleDateString() %> | 
+                        Target: <strong class="text-primary"><%= a.department ? a.department.name + ' (' + a.department.code + ')' : 'All Departments' %></strong>
+                      </small>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                      <span class="badge <%= a.priority === 'Urgent' ? 'bg-danger' : a.priority === 'High' ? 'bg-warning text-dark' : 'bg-secondary' %>">
+                        <%= a.priority %>
+                      </span>
+                      <form action="/admin/announcements/<%= a._id %>/delete" method="POST" onsubmit="return confirmDelete('Delete announcement: <%= a.title %>?');" class="d-inline">
+                        <button type="submit" class="btn btn-outline-danger btn-sm p-1" title="Delete">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                  <p class="text-muted small mb-0"><%= a.description %></p>
+                </div>
+              <% }) %>
+            </div>
+          <% } else { %>
+            <p class="text-muted small text-center py-5">No announcements published yet.</p>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Publish Form Column -->
+      <div class="col-lg-5">
+        <div class="card card-crp p-4">
+          <h5 class="fw-bold text-dark mb-3">
+            <i class="bi bi-broadcast text-danger me-1"></i> Broadcast New Announcement
+          </h5>
+          <form action="/admin/announcements" method="POST">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-muted">Notice Title *</label>
+              <input type="text" class="form-control" name="title" required placeholder="e.g. AWS Pre-Placement Talk OA Scheduled">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-muted">Priority Level</label>
+              <select class="form-select" name="priority">
+                <option value="Normal">Normal</option>
+                <option value="High">High Priority</option>
+                <option value="Urgent">Urgent / Immediate Action</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-muted">Target Department Audience</label>
+              <select class="form-select" name="department">
+                <option value="ALL">All College Departments</option>
+                <% if (departments && departments.length > 0) { %>
+                  <% departments.forEach(dept => { %>
+                    <option value="<%= dept._id %>"><%= dept.name %> (<%= dept.code %>)</option>
+                  <% }) %>
+                <% } %>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-muted">Announcement Content *</label>
+              <textarea class="form-control" name="description" rows="4" required placeholder="Full notice details, instructions, venue, and reporting times..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-danger w-100 py-2 fw-semibold">
+              <i class="bi bi-megaphone me-1"></i> Broadcast to Students
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

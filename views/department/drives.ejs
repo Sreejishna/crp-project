@@ -1,0 +1,98 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/alerts') %>
+
+<main class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+      <div>
+        <h2 class="fw-bold text-dark mb-1">
+          <i class="bi bi-briefcase text-primary me-2"></i> Drives Eligible for <%= department.code %> Department
+        </h2>
+        <p class="text-muted small mb-0">
+          Evaluates all <%= department.code %> candidates against company minimum CGPA and backlog criteria
+        </p>
+      </div>
+      <a href="/department/dashboard" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left me-1"></i> Dashboard
+      </a>
+    </div>
+
+    <!-- Drives Grid with Dynamic Student Matcher -->
+    <div class="row g-4">
+      <% if (drives && drives.length > 0) { %>
+        <% drives.forEach(drive => { %>
+          <div class="col-12">
+            <div class="card card-crp p-4">
+              <div class="row align-items-center g-3">
+                <div class="col-lg-8">
+                  <div class="d-flex align-items-center gap-2 flex-wrap mb-2">
+                    <span class="badge <%= drive.seasonQuarter === 'Q1' ? 'badge-season-q1' : drive.seasonQuarter === 'Q2' ? 'badge-season-q2' : drive.seasonQuarter === 'Q3' ? 'badge-season-q3' : 'badge-season-q4' %>">
+                      <%= drive.hiringSeason %> (<%= drive.seasonQuarter %>)
+                    </span>
+                    <span class="badge <%= drive.status === 'Active' ? 'badge-status-active' : drive.status === 'Upcoming' ? 'badge-status-upcoming' : 'badge-status-closed' %>">
+                      <%= drive.status %>
+                    </span>
+                    <span class="badge bg-light text-muted border">
+                      <i class="bi bi-geo-alt"></i> <%= drive.workLocation %> (<%= drive.workMode %>)
+                    </span>
+                  </div>
+
+                  <h4 class="fw-bold text-dark mb-1">
+                    <%= drive.jobRole %> 
+                    <span class="text-muted fs-6 fw-normal">at <%= drive.company ? drive.company.name : 'Company' %></span>
+                  </h4>
+
+                  <div class="d-flex flex-wrap gap-3 text-muted small my-2">
+                    <span><i class="bi bi-cash-stack text-success me-1"></i> Package: <strong class="text-dark"><%= drive.salary %></strong></span>
+                    <span><i class="bi bi-mortarboard me-1"></i> Minimum CGPA: <strong><%= drive.minCgpa %></strong></span>
+                    <span><i class="bi bi-exclamation-triangle me-1"></i> Max Backlogs: <strong><%= drive.maxBacklogs %></strong></span>
+                    <span><i class="bi bi-calendar-event me-1"></i> Start: <strong><%= new Date(drive.startDate).toLocaleDateString() %></strong></span>
+                  </div>
+
+                  <div class="d-flex flex-wrap gap-1 mt-2">
+                    <% drive.requiredSkills.forEach(s => { %>
+                      <span class="badge bg-light text-dark border small"><%= s %></span>
+                    <% }) %>
+                  </div>
+                </div>
+
+                <!-- 1-Click Eligibility Metric for this Department -->
+                <div class="col-lg-4 text-lg-end">
+                  <div class="card bg-light border p-3 text-start mb-2">
+                    <span class="text-muted small d-block">Department Matcher:</span>
+                    <h5 class="fw-bold text-primary mb-1">
+                      <%= drive.eligibleStudentCount %> of <%= drive.totalDeptStudents %> Candidates Eligible
+                    </h5>
+                    <div class="progress" style="height: 6px;">
+                      <% const pct = drive.totalDeptStudents > 0 ? (drive.eligibleStudentCount / drive.totalDeptStudents) * 100 : 0; %>
+                      <div class="progress-bar bg-success" role="progressbar" style="width: <%= pct %>%;"></div>
+                    </div>
+                    <small class="text-muted mt-1 d-block" style="font-size: 0.75rem;">
+                      <%= pct.toFixed(0) %>% meet ≥ <%= drive.minCgpa %> CGPA with 0 backlogs
+                    </small>
+                  </div>
+
+                  <a href="/companies/<%= drive.company ? drive.company._id : '#' %>" class="btn btn-outline-primary btn-sm w-100">
+                    <i class="bi bi-eye me-1"></i> View Interview Stages & Rounds
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <div class="col-12">
+          <div class="alert alert-light border text-center py-5 shadow-sm">
+            <i class="bi bi-briefcase fs-1 text-muted d-block mb-3"></i>
+            <h5 class="fw-bold text-dark">No drives currently scheduled for this department</h5>
+            <p class="text-muted small">New seasonal drives published by the Placement Cell will appear here automatically.</p>
+          </div>
+        </div>
+      <% } %>
+    </div>
+
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

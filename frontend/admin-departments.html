@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Department Management | Cyclic Recruitment Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-light">
+
+  <div id="navbar-container"></div>
+
+  <!-- Header -->
+  <div class="bg-white border-bottom py-4">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+          <h2 class="fw-bold mb-1 text-dark"><i class="bi bi-diagram-3 text-primary me-2"></i> Academic Department Management</h2>
+          <p class="text-muted small mb-0">Manage MCA & Engineering academic departments, HOD assignments, and placement quotas.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container py-4">
+    <div class="row g-4">
+      <!-- Create Department Form -->
+      <div class="col-lg-4">
+        <div class="crp-card p-4">
+          <h5 class="fw-bold text-dark mb-3"><i class="bi bi-plus-circle-fill text-primary me-2"></i> Add Department</h5>
+          
+          <form id="admin-dept-form">
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Department Name *</label>
+              <input type="text" id="dept-input-name" class="form-control" placeholder="e.g. Department of AI & Data Science" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Department Code *</label>
+              <input type="text" id="dept-input-code" class="form-control" placeholder="e.g. AIDS" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">HOD / Lead Name *</label>
+              <input type="text" id="dept-input-hod-name" class="form-control" placeholder="e.g. Dr. K. Ramanathan" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">HOD Email Address *</label>
+              <input type="email" id="dept-input-hod-email" class="form-control" placeholder="hod.aids@crp.edu" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">HOD Contact Phone</label>
+              <input type="tel" id="dept-input-hod-phone" class="form-control" placeholder="+91 98765 43210">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Description</label>
+              <textarea id="dept-input-desc" rows="2" class="form-control" placeholder="Specialization focus..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary-crp w-100 py-2">
+              <i class="bi bi-check-lg me-1"></i> Add Academic Department
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Departments List Table -->
+      <div class="col-lg-8">
+        <div class="crp-card">
+          <div class="crp-card-header">
+            <h5 class="fw-bold text-dark mb-0">Registered College Academic Departments</h5>
+          </div>
+          <div class="table-responsive">
+            <table class="crp-table">
+              <thead>
+                <tr>
+                  <th>Department Name</th>
+                  <th>Code</th>
+                  <th>HOD Contact</th>
+                  <th>Total Students</th>
+                  <th>Placed</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="admin-departments-table-body">
+                <!-- Injected by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!CRP.requireAuth(['admin'])) return;
+      CRP.renderNavbar('admin-departments');
+      CRP.renderFooter();
+      await AdminApp.initDepartmentManagement();
+    });
+  </script>
+</body>
+</html>

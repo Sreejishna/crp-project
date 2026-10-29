@@ -1,0 +1,87 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/alerts') %>
+
+<main class="py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h2 class="fw-bold text-dark mb-1">
+              <i class="bi bi-building-add text-primary me-2"></i>
+              <%= isEdit ? 'Edit Company Information' : 'Add New Corporate Partner' %>
+            </h2>
+            <p class="text-muted small mb-0">Define corporate identity, compensation tier, and campus recruitment contact</p>
+          </div>
+          <a href="/admin/companies" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Back to Directory
+          </a>
+        </div>
+
+        <div class="card card-crp p-4 p-md-5">
+          <form action="<%= isEdit ? '/admin/companies/' + company._id + '/edit' : '/admin/companies' %>" method="POST">
+            <div class="row g-3">
+              
+              <div class="col-md-7">
+                <label class="form-label small fw-semibold text-muted">Company Name *</label>
+                <input type="text" class="form-control" name="name" required placeholder="e.g. Amazon Web Services" value="<%= company ? company.name : '' %>">
+              </div>
+
+              <div class="col-md-5">
+                <label class="form-label small fw-semibold text-muted">Industry Domain *</label>
+                <input type="text" class="form-control" name="industry" required placeholder="e.g. Cloud Computing & Distributed Systems" value="<%= company ? company.industry : '' %>">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label small fw-semibold text-muted">Package Classification Tier</label>
+                <select class="form-select" name="tier">
+                  <option value="Super Dream (15+ LPA)" <%= company && company.tier === 'Super Dream (15+ LPA)' ? 'selected' : '' %>>Super Dream (15+ LPA)</option>
+                  <option value="Dream (8-15 LPA)" <%= company && company.tier === 'Dream (8-15 LPA)' ? 'selected' : '' %>>Dream (8-15 LPA)</option>
+                  <option value="Tier-1 Core (5-8 LPA)" <%= company && company.tier === 'Tier-1 Core (5-8 LPA)' ? 'selected' : '' %>>Tier-1 Core (5-8 LPA)</option>
+                  <option value="Mass / Regular (3.5-5 LPA)" <%= company && company.tier === 'Mass / Regular (3.5-5 LPA)' ? 'selected' : '' %>>Mass / Regular (3.5-5 LPA)</option>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label small fw-semibold text-muted">Corporate Headquarters</label>
+                <input type="text" class="form-control" name="headquarters" placeholder="e.g. Bengaluru / Hyderabad" value="<%= company ? company.headquarters : '' %>">
+              </div>
+
+              <div class="col-12">
+                <label class="form-label small fw-semibold text-muted">Company Overview & Profile Description *</label>
+                <textarea class="form-control" name="description" rows="4" required placeholder="Detailed profile of company culture, products, and campus recruitment focus..."><%= company ? company.description : '' %></textarea>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label small fw-semibold text-muted">Official Careers Website</label>
+                <input type="url" class="form-control" name="website" placeholder="https://aws.amazon.com" value="<%= company ? company.website : '' %>">
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label small fw-semibold text-muted">Campus Contact Email</label>
+                <input type="email" class="form-control" name="contactEmail" placeholder="campus@company.com" value="<%= company ? company.contactEmail : '' %>">
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label small fw-semibold text-muted">Talent Acquisition Lead</label>
+                <input type="text" class="form-control" name="contactPerson" placeholder="Vikram Joshi (Campus TA)" value="<%= company ? company.contactPerson : '' %>">
+              </div>
+
+              <div class="col-12 mt-4">
+                <button type="submit" class="btn btn-crp-primary px-4 py-2">
+                  <i class="bi bi-check-circle me-1"></i>
+                  <%= isEdit ? 'Update Company Details' : 'Save Company Partner' %>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

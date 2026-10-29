@@ -1,0 +1,315 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+<%- include('partials/alerts') %>
+
+<main class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+      <div>
+        <h2 class="fw-bold text-dark mb-1">
+          <i class="bi bi-calendar3 text-primary me-2"></i> Seasonal Hiring Calendar
+        </h2>
+        <p class="text-muted mb-0">
+          Four distinct annual campus hiring quarters aligned with academic semester progression
+        </p>
+      </div>
+      <div>
+        <a href="/companies" class="btn btn-outline-primary btn-sm fw-semibold">
+          <i class="bi bi-building me-1"></i> Browse All Companies
+        </a>
+      </div>
+    </div>
+
+    <!-- Seasonal Navigation Tabs -->
+    <ul class="nav nav-pills mb-4 gap-2" id="seasonTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active px-4 py-2" id="q1-tab" data-bs-toggle="pill" data-bs-target="#q1-pane" type="button" role="tab">
+          <i class="bi bi-flower1 me-1 text-info"></i> Q1 Cycle (Jan – Mar)
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link px-4 py-2" id="q2-tab" data-bs-toggle="pill" data-bs-target="#q2-pane" type="button" role="tab">
+          <i class="bi bi-sun me-1 text-success"></i> Q2 Cycle (Apr – Jun)
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link px-4 py-2" id="q3-tab" data-bs-toggle="pill" data-bs-target="#q3-pane" type="button" role="tab">
+          <i class="bi bi-tree me-1 text-warning"></i> Q3 Cycle (Jul – Sep)
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link px-4 py-2" id="q4-tab" data-bs-toggle="pill" data-bs-target="#q4-pane" type="button" role="tab">
+          <i class="bi bi-snow me-1 text-primary"></i> Q4 Cycle (Oct – Dec)
+        </button>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="seasonTabsContent">
+      <!-- Q1 PANE -->
+      <div class="tab-pane fade show active" id="q1-pane" role="tabpanel">
+        <div class="card card-crp p-4 mb-4 border-start border-4 border-info">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <div>
+              <h4 class="fw-bold mb-1 text-dark">Q1 Cycle: Spring Internships & PPO Conversions</h4>
+              <span class="text-muted small">Months: January to March | Core Target: Final semester MCA & B.Tech internships</span>
+            </div>
+            <span class="badge badge-season-q1 fs-6 px-3 py-2">Quarter 1 Active</span>
+          </div>
+          <p class="text-muted small mb-0">
+            High-velocity hiring for 6-month product engineering internships with direct Full-Time Employee (FTE) Pre-Placement Offers based on spring performance evaluations.
+          </p>
+        </div>
+
+        <div class="table-responsive bg-white rounded border shadow-sm">
+          <table class="table table-hover table-crp mb-0">
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Role & Location</th>
+                <th>Salary / Stipend</th>
+                <th>Cutoff (CGPA)</th>
+                <th>Recruitment Window</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (q1Drives && q1Drives.length > 0) { %>
+                <% q1Drives.forEach(drive => { %>
+                  <tr>
+                    <td>
+                      <strong class="text-dark"><%= drive.company ? drive.company.name : 'Company' %></strong>
+                      <small class="d-block text-muted"><%= drive.company ? drive.company.industry : '' %></small>
+                    </td>
+                    <td>
+                      <span class="fw-semibold text-primary"><%= drive.jobRole %></span>
+                      <small class="d-block text-muted"><%= drive.workLocation %> (<%= drive.workMode %>)</small>
+                    </td>
+                    <td><strong class="text-success"><%= drive.salary %></strong></td>
+                    <td><%= drive.minCgpa %> CGPA / 0 Backlogs</td>
+                    <td>
+                      <small class="text-muted d-block">Start: <%= new Date(drive.startDate).toLocaleDateString() %></small>
+                      <small class="text-muted d-block">End: <%= new Date(drive.endDate).toLocaleDateString() %></small>
+                    </td>
+                    <td>
+                      <span class="badge <%= drive.status === 'Active' ? 'badge-status-active' : drive.status === 'Upcoming' ? 'badge-status-upcoming' : 'badge-status-closed' %>">
+                        <%= drive.status %>
+                      </span>
+                    </td>
+                    <td>
+                      <a href="/companies/<%= drive.company ? drive.company._id : '#' %>" class="btn btn-outline-primary btn-sm">
+                        View Details
+                      </a>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr><td colspan="7" class="text-center py-4 text-muted">No Q1 drives scheduled yet.</td></tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Q2 PANE -->
+      <div class="tab-pane fade" id="q2-pane" role="tabpanel">
+        <div class="card card-crp p-4 mb-4 border-start border-4 border-success">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <div>
+              <h4 class="fw-bold mb-1 text-dark">Q2 Cycle: Summer Placement Drives & Consulting</h4>
+              <span class="text-muted small">Months: April to June | Core Target: Technology Consulting, Cloud, Data Engineering</span>
+            </div>
+            <span class="badge badge-season-q2 fs-6 px-3 py-2">Quarter 2</span>
+          </div>
+          <p class="text-muted small mb-0">
+            Dedicated recruitment for Associate Solution Advisors, Cloud Analysts, and E-Commerce logistics engineering teams.
+          </p>
+        </div>
+
+        <div class="table-responsive bg-white rounded border shadow-sm">
+          <table class="table table-hover table-crp mb-0">
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Role & Location</th>
+                <th>Salary / Stipend</th>
+                <th>Cutoff (CGPA)</th>
+                <th>Recruitment Window</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (q2Drives && q2Drives.length > 0) { %>
+                <% q2Drives.forEach(drive => { %>
+                  <tr>
+                    <td>
+                      <strong class="text-dark"><%= drive.company ? drive.company.name : 'Company' %></strong>
+                      <small class="d-block text-muted"><%= drive.company ? drive.company.industry : '' %></small>
+                    </td>
+                    <td>
+                      <span class="fw-semibold text-primary"><%= drive.jobRole %></span>
+                      <small class="d-block text-muted"><%= drive.workLocation %> (<%= drive.workMode %>)</small>
+                    </td>
+                    <td><strong class="text-success"><%= drive.salary %></strong></td>
+                    <td><%= drive.minCgpa %> CGPA / 0 Backlogs</td>
+                    <td>
+                      <small class="text-muted d-block">Start: <%= new Date(drive.startDate).toLocaleDateString() %></small>
+                      <small class="text-muted d-block">End: <%= new Date(drive.endDate).toLocaleDateString() %></small>
+                    </td>
+                    <td>
+                      <span class="badge <%= drive.status === 'Active' ? 'badge-status-active' : drive.status === 'Upcoming' ? 'badge-status-upcoming' : 'badge-status-closed' %>">
+                        <%= drive.status %>
+                      </span>
+                    </td>
+                    <td>
+                      <a href="/companies/<%= drive.company ? drive.company._id : '#' %>" class="btn btn-outline-primary btn-sm">
+                        View Details
+                      </a>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr><td colspan="7" class="text-center py-4 text-muted">No Q2 drives scheduled yet.</td></tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Q3 PANE -->
+      <div class="tab-pane fade" id="q3-pane" role="tabpanel">
+        <div class="card card-crp p-4 mb-4 border-start border-4 border-warning">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <div>
+              <h4 class="fw-bold mb-1 text-dark">Q3 Cycle: Autumn Mega Campus Day-1 Drives</h4>
+              <span class="text-muted small">Months: July to September | Core Target: Super Dream & Enterprise Tier-1 FTE</span>
+            </div>
+            <span class="badge badge-season-q3 fs-6 px-3 py-2">Quarter 3 Flagship</span>
+          </div>
+          <p class="text-muted small mb-0">
+            The peak campus recruitment season featuring Day-1 premier recruiters and massive IT services digital / prime tracks.
+          </p>
+        </div>
+
+        <div class="table-responsive bg-white rounded border shadow-sm">
+          <table class="table table-hover table-crp mb-0">
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Role & Location</th>
+                <th>Salary / Stipend</th>
+                <th>Cutoff (CGPA)</th>
+                <th>Recruitment Window</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (q3Drives && q3Drives.length > 0) { %>
+                <% q3Drives.forEach(drive => { %>
+                  <tr>
+                    <td>
+                      <strong class="text-dark"><%= drive.company ? drive.company.name : 'Company' %></strong>
+                      <small class="d-block text-muted"><%= drive.company ? drive.company.industry : '' %></small>
+                    </td>
+                    <td>
+                      <span class="fw-semibold text-primary"><%= drive.jobRole %></span>
+                      <small class="d-block text-muted"><%= drive.workLocation %> (<%= drive.workMode %>)</small>
+                    </td>
+                    <td><strong class="text-success"><%= drive.salary %></strong></td>
+                    <td><%= drive.minCgpa %> CGPA / 0 Backlogs</td>
+                    <td>
+                      <small class="text-muted d-block">Start: <%= new Date(drive.startDate).toLocaleDateString() %></small>
+                      <small class="text-muted d-block">End: <%= new Date(drive.endDate).toLocaleDateString() %></small>
+                    </td>
+                    <td>
+                      <span class="badge <%= drive.status === 'Active' ? 'badge-status-active' : drive.status === 'Upcoming' ? 'badge-status-upcoming' : 'badge-status-closed' %>">
+                        <%= drive.status %>
+                      </span>
+                    </td>
+                    <td>
+                      <a href="/companies/<%= drive.company ? drive.company._id : '#' %>" class="btn btn-outline-primary btn-sm">
+                        View Details
+                      </a>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr><td colspan="7" class="text-center py-4 text-muted">No Q3 drives scheduled yet.</td></tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Q4 PANE -->
+      <div class="tab-pane fade" id="q4-pane" role="tabpanel">
+        <div class="card card-crp p-4 mb-4 border-start border-4 border-purple">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <div>
+              <h4 class="fw-bold mb-1 text-dark">Q4 Cycle: Winter Dream Drives & Core Tech</h4>
+              <span class="text-muted small">Months: October to December | Core Target: FinTech, Quant Engineering & ERP Core</span>
+            </div>
+            <span class="badge badge-season-q4 fs-6 px-3 py-2">Quarter 4</span>
+          </div>
+          <p class="text-muted small mb-0">
+            Specialized engineering assessments focused on algorithmic problem solving, financial analytics, and distributed cloud computing.
+          </p>
+        </div>
+
+        <div class="table-responsive bg-white rounded border shadow-sm">
+          <table class="table table-hover table-crp mb-0">
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Role & Location</th>
+                <th>Salary / Stipend</th>
+                <th>Cutoff (CGPA)</th>
+                <th>Recruitment Window</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (q4Drives && q4Drives.length > 0) { %>
+                <% q4Drives.forEach(drive => { %>
+                  <tr>
+                    <td>
+                      <strong class="text-dark"><%= drive.company ? drive.company.name : 'Company' %></strong>
+                      <small class="d-block text-muted"><%= drive.company ? drive.company.industry : '' %></small>
+                    </td>
+                    <td>
+                      <span class="fw-semibold text-primary"><%= drive.jobRole %></span>
+                      <small class="d-block text-muted"><%= drive.workLocation %> (<%= drive.workMode %>)</small>
+                    </td>
+                    <td><strong class="text-success"><%= drive.salary %></strong></td>
+                    <td><%= drive.minCgpa %> CGPA / 0 Backlogs</td>
+                    <td>
+                      <small class="text-muted d-block">Start: <%= new Date(drive.startDate).toLocaleDateString() %></small>
+                      <small class="text-muted d-block">End: <%= new Date(drive.endDate).toLocaleDateString() %></small>
+                    </td>
+                    <td>
+                      <span class="badge <%= drive.status === 'Active' ? 'badge-status-active' : drive.status === 'Upcoming' ? 'badge-status-upcoming' : 'badge-status-closed' %>">
+                        <%= drive.status %>
+                      </span>
+                    </td>
+                    <td>
+                      <a href="/companies/<%= drive.company ? drive.company._id : '#' %>" class="btn btn-outline-primary btn-sm">
+                        View Details
+                      </a>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr><td colspan="7" class="text-center py-4 text-muted">No Q4 drives scheduled yet.</td></tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include('partials/footer') %>
